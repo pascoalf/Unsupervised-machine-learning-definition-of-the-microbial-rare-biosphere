@@ -47,3 +47,13 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+## Files for preparation of source code
+intermediate_files
+raw_figures
+edited_figures
+ulrb_v4.Rproj
+
+
+
+
