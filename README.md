@@ -20,3 +20,5 @@ If you want to reproduce the figures and tables in the paper, please use the sou
 The DADA2 scripts might take a long time and are available in the folder /DADA2. If you try to reproduce those steps, be careful with file paths, names, etc.
 
 Raw FASTQ files will be made available in ENA repository.
+
+We reproduced our code in a Linux (Fedora v38) machine, R version 4.3.2
