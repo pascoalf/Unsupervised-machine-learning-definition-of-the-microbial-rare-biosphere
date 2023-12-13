@@ -1,10 +1,5 @@
 ## Ecological analysis MOSJ 2016-2020 dataset
-
-# don't run
-#saveRDS(all_years_raw, file = "./source_data/AO_2016_2020_silva")
-
-#all_years <- AO_dataset_2015_2020
-all_years_raw <- readRDS("./source_data/AO_2016_2020_silva")
+all_years_raw <- readRDS("./source_data/AO_2016_2020_silva.rds")
 
 ## Clean taxonomy
 all_years <- all_years_raw %>% 
