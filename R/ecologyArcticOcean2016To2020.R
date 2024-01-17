@@ -249,6 +249,107 @@ plot(betadisper(
   type = "centroid"),
   main = "Verify homogeneity of variance per pelagic layer")
 
+## Top phyla RAC
+
+taxonomy_count <- 
+  all_years_ulrb %>% 
+  group_by(Sample, year, Depth) %>% 
+  count(Kingdom, Phylum, Class)
+#
+
+
+phyla_count <- all_years_ulrb %>% 
+  group_by(Sample, year, Depth) %>% 
+  count(Kingdom, Phylum)
+
+##
+proteobacteria_rac <- 
+  all_years_ulrb %>% 
+  filter(Phylum == "Proteobacteria") %>% 
+  group_by(Sample) %>% 
+  mutate(RelativeAbundance = Abundance*100/sum(Abundance)) %>% 
+  ggplot(aes(reorder(Sequence, -RelativeAbundance), RelativeAbundance, col = Classification)) + 
+  stat_summary() +
+  theme_bw()+
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.grid = element_blank(),
+        legend.position = "top") +
+  scale_color_manual(values = qualitative_colors[c(3,4,7)]) + 
+  scale_y_log10() + 
+  labs(title = "Rank Abundance Curve for Proteobacteria",
+       x = "Ranked ASVs",
+       y = "Relative abundance % (Log10 scale)") +
+  geom_hline(yintercept = c(0.01, 0.1, 1, 10), 
+             col = "grey", lty = "dashed")
+#
+
+all_rac <- 
+  all_years_ulrb %>% 
+  group_by(Sample) %>% 
+  mutate(RelativeAbundance = Abundance*100/sum(Abundance)) %>% 
+  ggplot(aes(reorder(Sequence, -RelativeAbundance), RelativeAbundance, col = Classification)) + 
+  stat_summary() +
+  theme_bw()+
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.grid = element_blank(),
+        legend.position = "top") +
+  scale_color_manual(values = qualitative_colors[c(3,4,7)]) + 
+  scale_y_log10() + 
+  labs(x = "ranked ASVs",
+       y = "relative abundance (%) \n(mean \U00B1 sd - Log10 scale)",
+       title = "All phyla",
+       tag = "a") +
+  geom_hline(yintercept = c(0.01, 0.1, 1, 10), col = "grey", lty = "dashed")
+#
+
+## RAC for other phyla ##
+specific_rac <- function(x){
+  # relative abundance of members of specified phylum
+  all_years_ulrb %>% 
+    group_by(Sample) %>% 
+    mutate(RelativeAbundance = round(Abundance*100/sum(Abundance), 2)) %>% 
+    filter(Phylum == x) %>%
+    ggplot(aes(reorder(Sequence, -RelativeAbundance), RelativeAbundance, col = Classification)) + 
+    stat_summary() +
+    theme_bw()+
+    theme(axis.text.x = element_blank(),
+          axis.ticks.x = element_blank(),
+          panel.grid = element_blank(),
+          legend.position = "top",
+          axis.title.y = element_text(size = 10)) +
+    scale_color_manual(values = qualitative_colors[c(3,4,7)]) + 
+    scale_y_log10() + 
+    labs(title = x,
+         x = "ranked ASVs",
+         y = "relative abundance (%) \n(mean \U00B1 sd - Log10 scale)") +
+    geom_hline(yintercept = c(0.01, 0.1, 1, 10), col = "grey", lty = "dashed")  
+}
+
+# phyla with more ASVS overall
+all_years_ulrb %>% 
+  group_by(Phylum) %>% 
+  summarise(Total = n()) %>% 
+  arrange(desc(Total))
+
+proteobacteria_rac <- specific_rac("Proteobacteria") + labs(tag = "b")
+bacteroidota_rac <- specific_rac("Bacteroidota") + labs(tag = "c")
+#cyanobacteria_rac <- specific_rac("Cyanobacteria")
+planctomycetota_rac <- specific_rac("Planctomycetota")+ labs(tag = "e")
+verrucomicrobiota_rac <- specific_rac("Verrucomicrobiota")+ labs(tag = "d")
+#chloroflexi_rac <- specific_rac("Chloroflexi")+ labs(tag = "b")
+#
+
+grid.arrange(
+  arrangeGrob(all_rac, ncol =1, nrow = 1),
+  arrangeGrob(
+    proteobacteria_rac,
+    bacteroidota_rac,
+    verrucomicrobiota_rac,
+    planctomycetota_rac,
+    ncol = 2, nrow = 2)
+)
 
 
 
