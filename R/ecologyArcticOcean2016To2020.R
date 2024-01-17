@@ -7,7 +7,7 @@ all_years <- all_years_raw %>%
          !is.na(Phylum)) %>%
   mutate(Phylum = ifelse(Phylum == "Cyanobacteria/Chloroplast", 
                          "Cyanobacteria", Phylum)) %>% 
-  filter(Class != "Chloroplast")
+  filter(Order != "Chloroplast")
 
 ## Samples that pass rarefaction
 samples_to_keep <- 
