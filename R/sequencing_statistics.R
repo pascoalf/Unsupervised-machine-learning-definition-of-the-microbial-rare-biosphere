@@ -138,7 +138,7 @@ short_vs_full_ulrb %>%
 
 
 ## MOSJ 2016-2020 dataset
-# ASVs after pre-processing 
+# ASVs after pre-processing (before rarefaction)
 all_years %>% 
   group_by(year, Sample) %>% 
   summarise(ASVs = specnumber(Abundance)) %>% 

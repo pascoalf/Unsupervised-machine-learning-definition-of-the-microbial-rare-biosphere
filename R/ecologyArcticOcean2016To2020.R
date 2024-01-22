@@ -215,11 +215,12 @@ with(rare_env,
                 label = TRUE))
 
 ## Permanova to check years
+set.seed(123)
 permanova_results <- adonis2(rare_biosphere[, -1] ~ year*water_group, data = rare_env)
 #store in csv file
 #write.csv(broom::tidy(permanova_results), "./permanova_results.csv")
 
-# betadisper to check
+# betadisper to check years variable
 set.seed(123)
 permutest(
   betadisper(
@@ -228,7 +229,8 @@ permutest(
     type = "centroid"),
   permutations = 999)
 
-#
+# pelagic layers
+set.seed(123)
 permutest(
   betadisper(
     vegdist(rare_biosphere[, -1]),
