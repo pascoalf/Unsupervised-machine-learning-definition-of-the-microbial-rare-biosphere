@@ -22,6 +22,47 @@ all_years_ulrb_matrix <- as.matrix(all_years_ulrb_matrix)
 all_years_fuzzy <- fuzzyq(all_years_ulrb_matrix, sorting = TRUE)
 
 
+all_years_fuzzy_df <- all_years_fuzzy$spp %>% 
+  mutate(ID = rownames(.),
+         Classification = ifelse(cluster == 0, "Rare", "Common"))
+#
+gridExtra::grid.arrange(
+all_years_fuzzy_df %>% 
+  ggplot(aes(reorder(ID, -Common.I),
+             Common.I,
+             col = Classification,
+             fill = Classification)) + 
+  geom_point() + 
+  geom_hline(yintercept = 0.5, lty = "dashed") + 
+  theme_classic() + 
+  theme(legend.position = "top",
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        strip.background = element_blank(),
+        strip.text = element_text(size = 12)) + 
+  labs(y = "Commonality index",
+       x = "ASVs") + 
+  scale_color_manual(values = qualitative_colors[c(1,2)]) + 
+  scale_fill_manual(values = qualitative_colors[c(1,2)]) + 
+  ylim(c(0,1)),
+all_years_fuzzy_df %>% 
+  ggplot(aes(reorder(ID, -sil_width),
+             sil_width,
+             col = Classification,
+             fill = Classification)) + 
+  geom_col() + 
+  geom_hline(yintercept = 0.5, lty = "dashed") + 
+  theme_classic() + 
+  theme(legend.position = "top",
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        strip.background = element_blank(),
+        strip.text = element_text(size = 12)) + 
+  labs(y = "Silhouette score",
+       x = "ASVs") + 
+  scale_color_manual(values = qualitative_colors[c(1,2)]) + 
+  scale_fill_manual(values = qualitative_colors[c(1,2)]))
+#
 fuzzy_vs_ulrb <-
   all_years_fuzzy$spp[,c(1,3)] %>% 
   as.data.frame() %>%

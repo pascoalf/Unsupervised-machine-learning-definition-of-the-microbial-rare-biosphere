@@ -23,13 +23,8 @@ short_vs_full_ulrb %>%
        y = "relative abundance (%) \n(Log10 scale)",
        col = "classification: ")
 
-
-
-
 #log_ratio = map(.x = data,~decostand(.x$Abundance, method = "rclr"))
-
-
-
+#
 all_years_ulrb %>%
   group_by(Sample, year, Classification) %>% 
   summarise(Diversity = vegan::specnumber(initialAbundance)) %>%
