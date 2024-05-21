@@ -12,7 +12,7 @@ library(gghalves)
 library(gridExtra)
 library(RColorBrewer)
 library(cluster)
-library(dada2)
+#library(dada2)
 library(microbenchmark)
 library(FuzzyQ)
 ##

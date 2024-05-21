@@ -32,25 +32,24 @@ all_years_rarefaction <-
                                   rrarefy(
                                     .x$Abundance, 
                                     sample = 10000))))) %>% 
-  unnest(c(data,Rarefied_reads))%>% 
+  unnest(c(data,Rarefied_reads)) %>% 
   rename(Rarefied_abundance = "V1")
 
+# alternative normalization
+all_years_rclr <- all_years %>% 
+  filter(Abundance > 1) %>% 
+  group_by(Sample) %>% 
+  mutate(sample_mean = mean(Abundance),
+         clr = log(Abundance/sample_mean))
+  
+
 ## Rare Biosphere ##
-all_years_ulrb <- 
-  all_years_rarefaction %>%  
+all_years_ulrb <- all_years_rarefaction %>%  
   mutate(Abundance = Rarefied_abundance, 
          Rarefied_abundance = NULL,
          Rarefaction = "Yes") %>% 
   define_rb()
 #
-
-
-all_years_richness <- 
-  all_years_ulrb %>% 
-  group_by(Sample, year, Depth, Classification) %>% 
-  summarise(Species_richness = vegan::specnumber(Abundance)) %>% 
-  ungroup()
-
 
 ### group by depth
 (alpha_diversity_plot_2016_2020 <- 
@@ -63,15 +62,17 @@ all_years_richness <-
                                           "mesopelagic (200-1000m)", 
                                           "bathypelagic (1000-4000m)"))) %>% 
     group_by(Sample, year, Zone, Classification) %>% 
+    filter(Abundance > 0) %>% 
     summarise(Diversity = vegan::specnumber(Abundance)) %>%
+    filter(Diversity > 0) %>% 
     ungroup() %>% 
     ggplot(aes(factor(year), Diversity))+
-    geom_half_boxplot(outlier.shape = "cross", 
-                      outlier.size = 0.5, 
-                      outlier.color = "red",
-                      aes(fill = Classification)) +
     geom_half_point(#size = 0.75, 
       aes(col = Classification)) +
+    geom_half_boxplot(outlier.shape = "cross", 
+                      outlier.size = 2,
+                      outlier.color = "red",
+                      aes(fill = Classification)) +
     scale_color_manual(values = qualitative_colors[c(3, 4, 7)])+
     scale_fill_manual(values = qualitative_colors[c(3, 4, 7)])+
     labs(x = "year",
@@ -86,8 +87,7 @@ all_years_richness <-
           strip.text = element_text(size = 12)) + 
     facet_grid(~Zone))
 
-
-
+#
 rare_phyla_count <- all_years_ulrb %>% 
   filter(Classification == "Rare") %>% 
   group_by(Sample, year, Depth) %>% 
@@ -205,14 +205,16 @@ with(rare_env,
                  #draw = "polygon",
                  lty = "dashed",
                  col = "black", 
-                 label = TRUE))
+                 label = TRUE,
+                 cex = 2))
 with(rare_env,
      ordispider(rare_nMDS,
                 year,
                 draw = "polygon",
                 lty = "dashed",
                 col = "lightgrey", 
-                label = TRUE))
+                label = TRUE,
+                cex = 2))
 
 ## Permanova to check years
 set.seed(123)

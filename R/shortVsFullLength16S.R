@@ -140,7 +140,8 @@ gridExtra::grid.arrange(
     ggplot(aes(reorder(ID, -RelativeAbundance), 
                RelativeAbundance, 
                col = Classification)) + 
-    stat_summary(size = 0.5, alpha = 0.5) +
+    geom_point(alpha = 0.5) + 
+    #stat_summary(size = 0.5, alpha = 0.5) +
     geom_hline(yintercept = c(0.01, 0.1, 1), linetype = "dashed") +
     theme_bw() + 
     theme(axis.text.x = element_blank(),
@@ -153,15 +154,14 @@ gridExtra::grid.arrange(
     scale_color_manual(values = qualitative_colors[c(3,4,7)]) + 
     scale_y_log10() + 
     labs(x = "ranked ASV",
-         y = "mean \U00B1 sd relative abundance (%) \n(Log10 scale)",
-         col = "classification: ")
-  ,
-  # Silhouette plot
+         y = "relative abundance (%) \n(Log10 scale)",
+         col = "classification: "),
   short_vs_full_ulrb %>%
     ggplot(aes(reorder(ID, -Silhouette_scores), 
                Silhouette_scores, 
-               col = Classification)) + 
-    stat_summary(size = 0.5, alpha = 0.5) +
+               col = Classification)) +
+    geom_point(alpha = 0.5) + 
+    #stat_summary(size = 0.5, alpha = 0.5) +
     theme_bw() + 
     theme(axis.text.x = element_blank(),
           panel.grid = element_blank(),
@@ -173,27 +173,40 @@ gridExtra::grid.arrange(
     scale_color_manual(values = qualitative_colors[c(3,4,7)]) + 
     guides(color = "none") + 
     labs(x = "ranked ASV",
-         y = "mean \U00B1 sd silhouette score") +
-    geom_hline(yintercept = 0), 
-  short_vs_full_ulrb_with_thresholds_summary %>% 
-    ggplot(aes(Marker, Count)) + 
-    facet_grid(~Definition) + 
-    geom_half_boxplot(side = "l", aes(fill = Classification),
-                      outlier.colour = "red",
-                      outlier.shape = "cross",
-                      outlier.size = 0.5) +
-    geom_half_point(side = "r", aes(col = Classification)) + 
-    scale_color_manual(values = qualitative_colors[c(3,4,7)]) + 
-    scale_fill_manual(values = qualitative_colors[c(3,4,7)]) + 
-    theme_bw() + 
-    theme(legend.position = "top",
-          strip.background = element_blank(),
-          panel.grid.major.x = element_line(color = "grey"),
-          panel.grid.minor.y = element_blank()) + 
-    labs(x = "marker gene",
-         y = "number of ASVs") + 
-    guides(fill = "none", color = "none")
-)
+         y = "Silhouette score") +
+    geom_hline(yintercept = 0))
+
+# Alpha diversity
+short_vs_full_ulrb_with_thresholds_summary %>% 
+  ggplot(aes(Classification, Count)) + 
+  facet_grid(~Definition) + 
+  stat_summary(aes(y = Count, group = Marker, 
+                   color = Marker), 
+               fun = median, geom = "line",
+               lwd = 1, lty = "dashed")+
+  geom_half_boxplot(side = "l", 
+                    aes(fill = Marker),
+                    outlier.colour = "red",
+                    outlier.shape = "cross",
+                    outlier.size = 3) +
+  geom_half_point(side = "r", 
+                  aes(col = Marker)) + 
+  scale_color_manual(values = qualitative_colors[c(1,2)]) + 
+  scale_fill_manual(values = qualitative_colors[c(1,2)]) + 
+  theme_bw() + 
+  theme(legend.position = "top",
+        strip.background = element_blank(),
+        panel.grid.major.x = element_line(color = "grey"),
+        panel.grid.minor.y = element_blank(),
+        strip.text = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        axis.title = element_text(size = 12)) + 
+  labs(x = "marker gene",
+       y = "number of ASVs",
+       fill = "Molecular method: ",
+       col = "Molecular method: ") 
+
+
 
 ### deeper view on silhouette scores
 # per species
@@ -375,7 +388,7 @@ short_vs_full_microbenchmark <-
   microbenchmark("V4V5 16S rRNA gene" = {define_rb(short_vs_full_for_benchmark_V4V5)},
                  "Full-length 16S rRNA gene" = {define_rb(short_vs_full_for_benchmark_Full)})
 
-
+#
 short_vs_full_microbenchmark %>% 
   autoplot() + 
   theme_bw() +
@@ -383,6 +396,90 @@ short_vs_full_microbenchmark %>%
         panel.grid.major.y = element_blank()) + 
   labs(x = "time (miliseconds)",
        y = "Marker gene",
-       title = "Time performance of define_rb()",
+       title = "Time it takes to run define_rb()",
        subtitle = "100 replications")
 
+
+## Add FuzzyQ
+# short sequences
+short_matrix <- short_vs_full_ulrb %>% 
+  filter(Marker == "V4-V5 16S rRNA gene", Abundance > 1) %>% 
+  ungroup() %>% 
+  select(Sample, Abundance, ID) %>% 
+  pivot_wider(names_from = "ID",
+              values_from = "Abundance")
+#
+short_matrix[is.na(short_matrix)] <- 0
+rownames(short_matrix) <- short_matrix$Sample
+short_matrix$Sample <- NULL  
+
+#
+fuzzy_short <- short_matrix %>% fuzzyq()
+
+#
+fuzzy_short_df <- fuzzy_short$spp %>% mutate(ID = paste(rownames(.), "short"),
+                                             Marker = "V4-V5 16S rRNA gene",
+                                             Classification = ifelse(cluster == 0, "Rare", "Common"))
+#
+# long sequences
+long_matrix <- short_vs_full_ulrb %>% 
+  filter(Marker == "Full-length 16S rRNA gene", Abundance > 1) %>% 
+  ungroup() %>% 
+  select(Sample, Abundance, ID) %>% 
+  pivot_wider(names_from = "ID",
+              values_from = "Abundance")
+#
+long_matrix[is.na(long_matrix)] <- 0
+rownames(long_matrix) <- long_matrix$Sample
+long_matrix$Sample <- NULL  
+
+#
+fuzzy_long <- long_matrix %>% fuzzyq()
+
+#
+fuzzy_long_df <- fuzzy_long$spp %>% mutate(ID = paste(rownames(.), "long"),
+                                             Marker = "Full-length 16S rRNA gene",
+                                             Classification = ifelse(cluster == 0, "Rare", "Common"))
+#
+short_vs_long_fuzzy <- fuzzy_short_df %>% 
+  rbind(fuzzy_long_df)
+
+#
+gridExtra::grid.arrange(
+short_vs_long_fuzzy %>% 
+  ggplot(aes(reorder(ID, -Common.I), Common.I,
+             col = Classification,
+             fill = Classification)) + 
+  geom_point() + 
+  facet_grid(~Marker, scales = "free_x") + 
+  geom_hline(yintercept = 0.5, lty = "dashed") + 
+  theme_classic() + 
+  theme(legend.position = "top",
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        strip.background = element_blank(),
+        strip.text = element_text(size = 12)) + 
+  labs(title = "FuzzyQ: V4V5 vs full-length 16S rRNA gene",
+       y = "Commonality index",
+       x = "ASVs")+ 
+  scale_color_manual(values = qualitative_colors[c(1,2)]) + 
+  scale_fill_manual(values = qualitative_colors[c(1,2)]),
+short_vs_long_fuzzy %>% 
+  ggplot(aes(reorder(ID, -sil_width),
+             sil_width,
+             col = Classification,
+             fill = Classification)) + 
+  geom_col() + 
+  facet_grid(~Marker, scales = "free_x") + 
+  geom_hline(yintercept = 0.5, lty = "dashed") + 
+  theme_classic() + 
+  theme(legend.position = "top",
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        strip.background = element_blank(),
+        strip.text = element_text(size = 12)) + 
+  labs(y = "Silhouette score",
+       x = "ASVs") + 
+  scale_color_manual(values = qualitative_colors[c(1,2)]) + 
+  scale_fill_manual(values = qualitative_colors[c(1,2)]))
+  

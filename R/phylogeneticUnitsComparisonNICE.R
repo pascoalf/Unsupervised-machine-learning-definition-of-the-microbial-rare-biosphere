@@ -142,6 +142,83 @@ nice_summary_ulrb_rarefied_tidy <-
     TRUE ~ "two thresholds (0.1% and 1%)")) %>% 
   mutate(Type = factor(Type, levels = c("ASV", "OTU", "mOTU")))
 
+
+## Add FuzzyQ classification
+# ASVs
+nice_ASVs_matrix <- nice_asv_clean %>% 
+  ungroup() %>%   
+  select(Sample, Abundance, ID, Type) %>% 
+  mutate(Sample_unique = paste(Sample, Type)) %>%
+  select(Sample_unique, Abundance, ID) %>% 
+  tidyr::pivot_wider(names_from = "ID",
+                     values_from = "Abundance",
+                     values_fn = list(count= list)) %>% 
+  print() %>% 
+  unchop(everything())
+#
+rownames(nice_ASVs_matrix) <- nice_ASVs_matrix$Sample_unique
+nice_ASVs_matrix$Sample_unique <- NULL
+nice_ASVs_matrix <- as.matrix(nice_ASVs_matrix)
+
+#
+ASVs_fuzzyQ <- fuzzyq(nice_ASVs_matrix, sorting = TRUE)$spp
+ASVs_fuzzyQ$Type = "ASV"
+
+# OTUs
+nice_otu_matrix <- nice_otu %>% 
+  ungroup() %>%   
+  select(Sample, Abundance, ID) %>% 
+  tidyr::pivot_wider(names_from = "ID",
+                     values_from = "Abundance",
+                     values_fn = list(count= list)) %>% 
+  print() %>% 
+  unchop(everything())
+#
+rownames(nice_otu_matrix) <- nice_otu_matrix$Sample
+nice_otu_matrix$Sample <- NULL
+nice_otu_matrix <- as.matrix(nice_otu_matrix)
+
+#
+OTUs_fuzzyQ <- fuzzyq(nice_otu_matrix, sorting = TRUE)$spp
+OTUs_fuzzyQ$Type = "OTU"
+
+# mOTUs
+nice_mOTU_matrix <- nice_motu %>% 
+  ungroup() %>%   
+  select(Sample, Abundance, ID) %>% 
+  tidyr::pivot_wider(names_from = "ID",
+                     values_from = "Abundance",
+                     values_fn = list(count= list)) %>% 
+  print() %>% 
+  unchop(everything())
+#
+rownames(nice_mOTU_matrix) <- nice_mOTU_matrix$Sample
+nice_mOTU_matrix$Sample <- NULL
+nice_mOTU_matrix <- as.matrix(nice_mOTU_matrix)
+
+#
+mOTUs_fuzzyQ <- fuzzyq(nice_mOTU_matrix, sorting = TRUE)$spp
+mOTUs_fuzzyQ$Type = "mOTU"
+
+## combine fuzzyQ results
+nice_fuzyQ <- rbind(ASVs_fuzzyQ, 
+      OTUs_fuzzyQ, 
+      mOTUs_fuzzyQ) %>% 
+  mutate(Classification = ifelse(cluster == 0, "Rare", "Common"),
+         Definition = "FuzzyQ",
+         ID = rownames(.))
+
+#
+nice_fuzyQ_full <- nice_dataset %>% 
+  left_join(nice_fuzyQ)
+
+#
+nice_fuzzy_diversity <- nice_fuzyQ_full %>% 
+  filter(Abundance > 0) %>% 
+  group_by(Sample, Type, Classification) %>% 
+  summarise(Count = specnumber(Abundance), 
+            Definition = "FuzzyQ") 
+
 # Plot for multiple panel figure
 gridExtra::grid.arrange(
   #
@@ -153,8 +230,8 @@ gridExtra::grid.arrange(
     ggplot(aes(x = reorder(ID, -RelativeAbundance), 
                y = RelativeAbundance, 
                col = Classification)) +
-    #geom_point()+
-    stat_summary(alpha = 0.5) +
+    geom_point(alpha = 0.5)+
+    #stat_summary(alpha = 0.5) +
     facet_grid(~Type, scales = "free") + 
     scale_color_manual(values = qualitative_colors[c(3,4,7)]) + 
     theme_bw() + 
@@ -167,7 +244,7 @@ gridExtra::grid.arrange(
           axis.ticks.x = element_blank(),
           legend.position = "top") + 
     labs(x = "ranked phylogenetic units",
-         y = "mean \U00B1 sd relative abundance (%) \n(Log10 scale)",
+         y = "Relative abundance (%) \n(Log10 scale)",
          col = "classification: ",
          tag = "a")
   ,
@@ -176,7 +253,8 @@ gridExtra::grid.arrange(
     mutate(Type = factor(Type, levels = c("ASV", "OTU", "mOTU"))) %>% 
     ggplot(aes(reorder(ID, -Silhouette_scores), 
                Silhouette_scores, col = Classification)) + 
-    stat_summary(alpha = 0.5) + 
+    geom_point(alpha = 0.5) + 
+    #stat_summary(alpha = 0.5) + 
     facet_wrap(~Type, scales = "free_x") + 
     #  scale_fill_manual(values = qualitative_colors[c(2,4,7)]) + 
     scale_color_manual(values = qualitative_colors[c(3,4,7)]) + 
@@ -187,32 +265,44 @@ gridExtra::grid.arrange(
           strip.text = element_text(size = 10),
           panel.grid = element_blank()) +
     guides(color = "none") + 
-    labs(y = "mean \U00B1 sd silhouette score \n(Log10 scale)",
+    labs(y = "Silhouette score \n(Log10 scale)",
          x = "ranked phylogenetic units",
          tag = "b") + 
-    geom_hline(yintercept = 0),
-  # alpha diversity
-  nice_summary_ulrb_rarefied_tidy %>% 
-    ggplot(aes(x = Type, y = Count)) + 
-    geom_half_boxplot(side = "l", aes(fill = Classification), 
-                      outlier.colour = "red",
-                      outlier.shape = "cross",
-                      outlier.size = 0.5)+
-    geom_half_point(side = "r", size = 0.75, aes(col = Classification)) + 
-    facet_grid(~Definition) + 
-    scale_fill_manual(values = qualitative_colors[c(3,4,7)]) + 
-    scale_color_manual(values = qualitative_colors[c(3,4,7)]) + 
-    theme_bw() + 
-    theme(legend.position = "top",
-          strip.background = element_blank(),
-          panel.grid.minor.y = element_blank(),
-          panel.grid.major.x = element_line(color = "grey"),
-          strip.text = element_text(size = 12)) + 
-    labs(x = "kind of phylogenetic unit",
-         y = "number of phylogenetic units",
-         tag= "c") + 
-    guides(color = "none", fill = "none")
+    geom_hline(yintercept = c(0)) + 
+    geom_hline(yintercept = c(-0.5, 0.5), lty = "dashed", color = "grey41")
 )
+
+##
+# alpha diversity
+nice_summary_ulrb_rarefied_tidy %>% 
+  filter(!is.na(Classification)) %>% 
+  mutate(Classification = factor(Classification, 
+                                 levels = c("Rare", "Undetermined", "Abundant", "Common"))) %>%
+  mutate(Definition = factor(Definition, 
+                             levels = c("one threshold (0.1%)",
+                                        "two thresholds (0.1% and 1%)",
+                                        "ulrb"))) %>% 
+  ggplot(aes(x = Classification, y = Count)) +
+  stat_summary(aes(y = Count, group = Type, 
+                   color = Type), 
+               fun = median, geom = "line",
+               lwd = 1, lty = "dashed") + 
+  geom_half_boxplot(side = "l", aes(fill = Type), 
+                    outlier.colour = "red",
+                    outlier.shape = "cross",
+                    outlier.size = 2)+
+  geom_half_point(side = "r", size = 0.75, aes(col = Type)) + 
+  facet_grid(~Definition, scales = "free_x") + 
+  scale_fill_manual(values = qualitative_colors[c(1, 2, 3)]) + 
+  scale_color_manual(values = qualitative_colors[c(1, 2, 3)]) + 
+  theme_bw() + 
+  theme(legend.position = "top",
+        strip.background = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.x = element_line(color = "grey"),
+        strip.text = element_text(size = 12)) + 
+  labs(x = "kind of phylogenetic unit",
+       y = "number of phylogenetic units")
 
 
 ## report on silhouette scores
@@ -248,7 +338,7 @@ plot_sil_species <-
         legend.position = "top") + 
   labs(y = "Percentage of phylogenetic units (%)",
        fill = "Evaluation",
-       title = "Position of phylogenetic units in their clusters",
+       title = "Evaluation of unit within its classification/cluster",
        tag = "a")
 
 
@@ -284,7 +374,7 @@ plot_sil_class <- silhouette_structure_per_classifications %>%
         legend.position = "top") + 
   labs(y = "Percentage of samples (%)",
        fill = "Evaluation",
-       title = "Structure of each classification",
+       title = "Evaluation of each classification/cluster",
        tag = "b")
 
 # average overall (i.e. structure of the clustering)
@@ -318,15 +408,16 @@ plot_sil_nice_overall <- silhouette_structure_overall %>%
         legend.position = "top") + 
   labs(y = "Percentage of samples (%)",
        fill = "Evaluation",
-       title = "Structure of final cluster",
+       title = "Evaluation of final cluster (by average Silhouette score)",
        tag = "c")
 
 
 ### overall silhouette evaluation
 grid.arrange(
-  plot_sil_species + theme(axis.text.x = element_text(angle = 90, vjust  =0)),
+  plot_sil_species + theme(axis.text.x = element_text(angle = 90, vjust = 0)),
   arrangeGrob(
-    plot_sil_class + theme(axis.text.x = element_text(angle = 90, vjust  =0)) + guides(fill = "none"),
+    plot_sil_class + theme(axis.text.x = element_text(angle = 90, vjust = 0)) + 
+      guides(fill = "none"),
     arrangeGrob(
       plot_sil_nice_overall + guides(fill = "none"),
       ncol = 1)),
@@ -334,7 +425,6 @@ grid.arrange(
 
 
 ## why are ASVs harder to cluster?
-
 nice_ulrb_rarefied %>% 
   mutate(Type = factor(Type, levels = c("ASV", "OTU", "mOTU"))) %>%
   ggplot(aes(Abundance, fill = Type)) + 
@@ -389,9 +479,50 @@ phylgeneticUnits_benchmark %>%
         panel.grid.major.y = element_blank()) + 
   labs(x = "time (miliseconds)",
        y = "Phylogenetic unit",
-       title = "Time performance of define_rb()",
+       title = "Time it takes to run define_rb()",
        subtitle = "100 replications")
 
 
-## Sequencing summary statistics
+
+#####
+gridExtra::grid.arrange(
+nice_fuzyQ %>% 
+  ggplot(aes(reorder(ID, -Common.I), 
+             y = Common.I, 
+             col = Classification)) + 
+  geom_point() +
+  theme_classic() + 
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        legend.position = "top",
+        strip.background = element_blank(),
+        strip.text = element_text(size =12)) + 
+  labs(y = "Commonnality index",
+       x = "Ranked pylogenetic units") + 
+  facet_grid(~Type, scales = "free_x") + 
+  scale_color_manual(values = qualitative_colors[c(1,2)]) + 
+  ylim(c(0,1)),
+
+# Silhouette scores
+nice_fuzyQ %>% 
+  ggplot(aes(reorder(ID, -sil_width),
+             y = sil_width, 
+             fill = Classification,
+             col = Classification)) + 
+  geom_col() + 
+  theme_classic() + 
+  theme(legend.position = "top",
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        strip.background = element_blank(),
+        strip.text = element_text(size =12)) + 
+  geom_hline(yintercept = 0.5, lty = "dashed") + 
+  facet_grid(~Type, scales = "free_x") + 
+  labs(y = "Silhouette score",
+       x = "Phylogenetic unit")+ 
+  scale_color_manual(values = qualitative_colors[c(1,2)]) + 
+  scale_fill_manual(values = qualitative_colors[c(1,2)]))
+  
+
+
 
