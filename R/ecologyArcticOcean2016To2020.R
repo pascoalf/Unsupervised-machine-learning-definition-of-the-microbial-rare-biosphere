@@ -18,9 +18,8 @@ samples_to_keep <-
   filter(Total_reads >= 10000) %>% 
   pull(Sample)
 
-set.seed(123)
 # will give warning, this is not a problem
-all_years_rarefaction <- 
+set.seed(123); all_years_rarefaction <- 
   all_years %>% 
   filter(Sample %in% samples_to_keep) %>%  ## filter samples with more than 10 000 reads
   filter(Abundance > 1) %>% 
