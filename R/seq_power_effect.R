@@ -168,10 +168,49 @@ ulrb_vs_reads_df.2 %>%
   scale_color_manual(values = qualitative_colors[c(3, 4, 7)])
 
 
+## fuzzyQ
+multiple_rarefaction_fuzzyQ <- function(x, size){
+  if(size > 50000){
+    stop("Maximum size is 50000")
+  }
+set.seed(123); x_rarefied <- rrarefy(x, sample = size)
 
+# remove missing values
+x_rarefied[is.na(x_rarefied)] <- 0
 
+# apply fuzzyQ
+fuzzyq_cluster <- fuzzyq(x_rarefied, sorting = TRUE)
 
+#
+fuzzyq_cluster$spp %>% 
+  as.data.frame() %>% 
+  mutate(Species = rownames(.),
+         Classification = ifelse(cluster == 0, "Rare", "Common")) %>% 
+  group_by(Classification) %>% 
+  summarise(avgSil = mean(sil_width),
+            size = size)
+}
 
+# run fuzzyQ for all seq. powers
+fuzzyQ_all_seq_power <- lapply(reads_groups.2, function(size){
+  multiple_rarefaction_fuzzyQ(x = mosj_matrix_selected, size = size)})
 
-
-
+# plot performance vs seq power
+fuzzyQ_all_seq_power %>%
+  bind_rows() %>% 
+  ggplot(aes(size, avgSil, col = Classification)) + 
+  stat_summary() + 
+  stat_summary(aes(y = avgSil, group = Classification, 
+                   color = Classification), 
+               fun = mean, geom = "line") + 
+  theme_classic() + 
+  theme(legend.position = "top") + 
+  ylim(0,1) + 
+  geom_hline(yintercept = c(0.25, 0.5, 0.7), lty = "dashed") + 
+  geom_text(data = evaluation_sil, # this object was made in "R/species_number_effect.R"
+            aes(y = score+0.025, x = 3500, label = evaluation), col = "black") + 
+  labs(y = "mean (\U00B1 sd) of average Silhouette score",
+       x = "number of reads per sample",
+       title = "fuzzyQ performance as a function of number of reads per sample",
+       subtitle = "n = 34 samples") +
+  scale_color_manual(values = qualitative_colors[c(3, 4, 7)])

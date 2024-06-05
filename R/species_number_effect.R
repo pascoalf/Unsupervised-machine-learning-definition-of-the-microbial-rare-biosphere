@@ -54,5 +54,75 @@ all_species_test_df %>%
   geom_text(data = evaluation_sil, aes(y = score+0.01, x = 500, label = evaluation), col = "black") + 
   scale_x_continuous(breaks = seq(from = 100, to = 4000, by = 300))
   
-  
 
+## FuzzyQ
+
+# Prepare microbiome data for fuzzyQ
+mosj_matrix <- all_years %>% 
+  ungroup() %>%   
+  select(Sample, Abundance, Sequence, Depth, year) %>% 
+  mutate(Sample_unique = paste(Sample, year)) %>%
+  select(Sample_unique, Abundance, Sequence) %>% 
+  tidyr::pivot_wider(names_from = "Sequence",
+                     values_from = "Abundance",
+                     values_fn = list(count= list)) %>% 
+  print() %>% 
+  unchop(everything())
+
+
+rownames(mosj_matrix) <- mosj_matrix$Sample_unique
+mosj_matrix$Sample_unique <- NULL
+mosj_matrix <- as.matrix(mosj_matrix)
+
+# rarefy to 50000 reads, selected 34 samples
+mosj_matrix_selected <- mosj_matrix[rowSums(mosj_matrix, na.rm = TRUE) >= 50000,]
+# remove NAs
+mosj_matrix_selected[is.na(mosj_matrix_selected)] <- 0
+mosj_matrix_rarefied_50000 <- rrarefy(mosj_matrix_selected, sample = 50000)
+
+#
+fuzzyq_species_size <- function(x, size){
+  # subsample n samples
+  set.seed(123); subsampled_data <- x[, sample(1:length(colnames(x)), 
+                                               size = size, replace = FALSE)]
+  # replace NAs with zeros
+  subsampled_data[is.na(subsampled_data)] <- 0
+  #
+  set.seed(123); fuzzyq_cluster <- fuzzyq(subsampled_data, sorting = TRUE)
+  # return data frame with relevant metrics
+  fuzzyq_cluster$spp %>% 
+    as.data.frame() %>% 
+    mutate(Species = rownames(.),
+           Classification = ifelse(cluster == 0, "Rare", "Common")) %>% 
+    group_by(Classification) %>% 
+    summarise(avgSil = mean(sil_width),
+              size = size)
+}
+
+# all groups of species size
+
+fuzzyq_all_species <- lapply(species_size_groups, 
+                             function(size) fuzzyq_species_size(size = size, 
+                                                                x = mosj_matrix_rarefied_50000))
+##
+fuzzyq_all_species.df <- bind_rows(fuzzyq_all_species)
+
+#  
+fuzzyq_all_species.df %>% 
+  mutate(Classification = factor(Classification, levels = c("Rare", "Common"))) %>% 
+  ggplot(aes(size, avgSil, col = Classification)) + 
+  geom_point() + 
+  geom_line(aes(group = Classification)) + 
+  ylim(-0.5,1) + 
+  geom_hline(yintercept = c(0.25, 0.5, 0.7), lty = "dashed") + 
+  geom_vline(xintercept = 700, lty = "dashed") + 
+  theme_classic() + 
+  labs(x = "number of species",
+       y = "average Silhouette score",
+       title = "fuzzyQ performance as a function of number of species",
+       subtitle = "total reads per sample = 50000 reads\nn = 34 samples")+
+  theme(legend.position = "top") + 
+  scale_color_manual(values = qualitative_colors[c(3, 6)]) + 
+  geom_text(data = evaluation_sil_extra, aes(y = score+0.075, x = 250, label = evaluation), col = "black") + 
+  scale_x_continuous(breaks = seq(from = 100, to = 4000, by = 300))
+ 
