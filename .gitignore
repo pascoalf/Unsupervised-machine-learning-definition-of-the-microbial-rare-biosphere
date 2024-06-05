@@ -61,3 +61,11 @@ ulrb_v4.Rproj
 
 Unsupervised-machine-learning-definition-of-the-microbial-rare-biosphere.Rproj
 new_figures
+=======
+figures/
+
+<<<<<<< HEAD
+new_figures
+=======
+figures/
+>>>>>>> ed27c60d89c21e44a84d6a7eb837f5cce59cd8c5
