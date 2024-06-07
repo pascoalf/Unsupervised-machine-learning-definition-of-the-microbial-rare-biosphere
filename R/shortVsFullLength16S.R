@@ -355,49 +355,49 @@ grid.arrange(
 )
 
 # short vs full microbenchmarking #
-short_vs_full_for_benchmark <- 
-  short_and_full_asv %>% 
-  filter(!Sample %in% short_vs_full_samples_to_remove) %>% 
-  mutate(Rarefaction = case_when(str_detect(Marker, "V4-V5") ~ short_asv_rarefaction,
-                                 str_detect(Marker, "Full") ~ full_asv_rarefaction)) %>% 
-  group_by(Marker, Sample, Rarefaction) %>% 
-  nest() %>% 
-  mutate(Rarefied_reads = map(.x = data, 
-                              ~as.data.frame(
-                                t(
-                                  rrarefy(.x$Abundance, 
-                                          sample = Rarefaction))))) %>% 
-  unnest(c(data, Rarefied_reads)) %>% 
-  rename(Rarefied_abundance = "V1") %>% 
-  mutate(Abundance = Rarefied_abundance, Rarefied_abundance = NULL) %>% 
-  group_by(Marker, Sample) %>% 
-  mutate(RelativeAbundance = Abundance * 100/sum(Abundance)) %>% ## abundance to relative abundance
-  ungroup()
+#short_vs_full_for_benchmark <- 
+#  short_and_full_asv %>% 
+#  filter(!Sample %in% short_vs_full_samples_to_remove) %>% 
+#  mutate(Rarefaction = case_when(str_detect(Marker, "V4-V5") ~ short_asv_rarefaction,
+#                                 str_detect(Marker, "Full") ~ full_asv_rarefaction)) %>% 
+#  group_by(Marker, Sample, Rarefaction) %>% 
+#  nest() %>% 
+#  mutate(Rarefied_reads = map(.x = data, 
+#                              ~as.data.frame(
+#                                t(
+#                                  rrarefy(.x$Abundance, 
+#                                          sample = Rarefaction))))) %>% 
+#  unnest(c(data, Rarefied_reads)) %>% 
+#  rename(Rarefied_abundance = "V1") %>% 
+#  mutate(Abundance = Rarefied_abundance, Rarefied_abundance = NULL) %>% 
+#  group_by(Marker, Sample) %>% 
+#  mutate(RelativeAbundance = Abundance * 100/sum(Abundance)) %>% ## abundance to relative abundance
+#  ungroup()
 
 #
-short_vs_full_for_benchmark_V4V5 <- 
-  short_vs_full_for_benchmark %>% 
-  filter(str_detect(Marker, "V4-V5"))
+#short_vs_full_for_benchmark_V4V5 <- 
+#  short_vs_full_for_benchmark %>% 
+#  filter(str_detect(Marker, "V4-V5"))
 #
-short_vs_full_for_benchmark_Full <- 
-  short_vs_full_for_benchmark %>% 
-  filter(str_detect(Marker, "Full"))
+#short_vs_full_for_benchmark_Full <- 
+#  short_vs_full_for_benchmark %>% 
+#  filter(str_detect(Marker, "Full"))
 
 # 
-short_vs_full_microbenchmark <- 
-  microbenchmark("V4V5 16S rRNA gene" = {define_rb(short_vs_full_for_benchmark_V4V5)},
-                 "Full-length 16S rRNA gene" = {define_rb(short_vs_full_for_benchmark_Full)})
+#short_vs_full_microbenchmark <- 
+#  microbenchmark("V4V5 16S rRNA gene" = {define_rb(short_vs_full_for_benchmark_V4V5)},
+#                 "Full-length 16S rRNA gene" = {define_rb(short_vs_full_for_benchmark_Full)})
 
 #
-short_vs_full_microbenchmark %>% 
-  autoplot() + 
-  theme_bw() +
-  theme(panel.grid.minor = element_blank(),
-        panel.grid.major.y = element_blank()) + 
-  labs(x = "time (miliseconds)",
-       y = "Marker gene",
-       title = "Time it takes to run define_rb()",
-       subtitle = "100 replications")
+#short_vs_full_microbenchmark %>% 
+#  autoplot() + 
+#  theme_bw() +
+#  theme(panel.grid.minor = element_blank(),
+#        panel.grid.major.y = element_blank()) + 
+#  labs(x = "time (miliseconds)",
+#       y = "Marker gene",
+#       title = "Time it takes to run define_rb()",
+#       subtitle = "100 replications")
 
 
 ## Add FuzzyQ

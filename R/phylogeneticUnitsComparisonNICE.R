@@ -467,20 +467,20 @@ nice_ulrb_rarefied_for_bench_mOTU <-
   nice_ulrb_rarefied_for_bench %>% filter(Type == "mOTU")
 
 #
-phylgeneticUnits_benchmark <- 
-  microbenchmark(ASV = {define_rb(nice_ulrb_rarefied_for_bench_ASV)},
-                 OTU = {define_rb(nice_ulrb_rarefied_for_bench_OTU)},
-                 mOTU = {define_rb(nice_ulrb_rarefied_for_bench_mOTU)})
+#phylgeneticUnits_benchmark <- 
+#  microbenchmark(ASV = {define_rb(nice_ulrb_rarefied_for_bench_ASV)},
+#                 OTU = {define_rb(nice_ulrb_rarefied_for_bench_OTU)},
+#                 mOTU = {define_rb(nice_ulrb_rarefied_for_bench_mOTU)})
 #
-phylgeneticUnits_benchmark %>% 
-  autoplot() + 
-  theme_bw() +
-  theme(panel.grid.minor = element_blank(),
-        panel.grid.major.y = element_blank()) + 
-  labs(x = "time (miliseconds)",
-       y = "Phylogenetic unit",
-       title = "Time it takes to run define_rb()",
-       subtitle = "100 replications")
+#phylgeneticUnits_benchmark %>% 
+#  autoplot() + 
+#  theme_bw() +
+#  theme(panel.grid.minor = element_blank(),
+#        panel.grid.major.y = element_blank()) + 
+#  labs(x = "time (miliseconds)",
+#       y = "Phylogenetic unit",
+#       title = "Time it takes to run define_rb()",
+#       subtitle = "100 replications")
 
 
 
