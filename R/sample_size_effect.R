@@ -25,7 +25,7 @@ ulrb_sample_size_effect.2_df <- bind_rows(ulrb_sample_size_effect.2) %>%
   mutate(method = "ulrb")
 
 #
-ulrb_sample_size_effect.2_df %>% 
+ulrb_vs_samples_plot <- ulrb_sample_size_effect.2_df %>% 
   ggplot(aes(x = size, avgSil, col = Classification))+
   stat_summary() + 
   stat_summary(aes(y = avgSil, group = Classification, 
@@ -36,7 +36,7 @@ ulrb_sample_size_effect.2_df %>%
   theme(legend.position = "top") +
   labs(x = "n", 
        y = "mean (\U00B1 sd) of average Silhouette score",
-       title = "ulrb performance as a function of number of samples (n)",
+       #title = "ulrb performance as a function of number of samples (n)",
        subtitle = "Total reads per sample = 10000 reads") + 
   geom_vline(xintercept = 30, lty = "dashed", col = "grey41") + 
   scale_color_manual(values = qualitative_colors[c(3, 4, 7)])+

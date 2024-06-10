@@ -36,6 +36,7 @@ evaluation_sil <- data.frame(score = c(0.26, 0.51, 0.71),
                              Classification = "Rare") # placeholder for label
 
 #
+ulrb_vs_species_plot <- 
 all_species_test_df %>% 
   ggplot(aes(size, avgSil, col = Classification)) + 
   stat_summary() + 
@@ -47,11 +48,12 @@ all_species_test_df %>%
   theme_classic() + 
   labs(x = "number of species",
        y = "mean (\U00B1 sd) of average Silhouette score",
-       title = "ulrb performance as a function of number of species",
+       #title = "ulrb performance as a function of number of species",
        subtitle = "total reads per sample = 50000 reads\nn = 34 samples")+
-  theme(legend.position = "top") + 
+  theme(legend.position = "top",
+        axis.text.x = element_text(angle = 90)) + 
   scale_color_manual(values = qualitative_colors[c(3, 4, 7)]) + 
-  geom_text(data = evaluation_sil, aes(y = score+0.01, x = 500, label = evaluation), col = "black") + 
+  geom_text(data = evaluation_sil, aes(y = score+0.025, x = 1000, label = evaluation), col = "black") + 
   scale_x_continuous(breaks = seq(from = 100, to = 4000, by = 300))
   
 
