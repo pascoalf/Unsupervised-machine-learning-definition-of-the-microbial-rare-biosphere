@@ -50,7 +50,7 @@ grid.arrange(
           strip.background = element_blank(),
           legend.position = "top") + 
     labs(x = "ranked ant species",
-         y = "relative abundance (%) (mean \U00B1 sd)",
+         y = "mean \U00B1 sd relative abundance (%)",
          col = "Classification ",
          title = "Ants dataset",
          tag = "a") +
@@ -69,7 +69,7 @@ grid.arrange(
     geom_hline(yintercept = 0)  + 
     geom_hline(yintercept = 0.5, lty = "dashed") + 
     labs(x = "ranked ant species",
-         y = "Silhouette score (mean \U00B1 sd)",
+         y = "mean \U00B1 sd of average Silhouette score",
          col = "Classification ",
          title = "Ants dataset",
          tag = "b") +
@@ -90,7 +90,7 @@ grid.arrange(
           strip.background = element_blank(),
           legend.position = "top") + 
     labs(x = "ranked ant species",
-         y = "relative abundance (%) (mean \U00B1 sd )",
+         y = "mean \U00B1 sd relative abundance (%)",
          col = "Classification ",
          title = "BCI dataset",
          tag = "c") +
@@ -108,7 +108,7 @@ grid.arrange(
           legend.position = "top") + 
     labs(title = "BCI dataset",
          x = "ranked tree species",
-         y = "Silhouette score (mean \U00B1 sd)",
+         y = "mean \U00B1 sd of average Silhouette score",
          col = "Classification",
          tag = "d") +
     scale_color_manual(values = qualitative_colors[c(3, 4, 7)]) + 

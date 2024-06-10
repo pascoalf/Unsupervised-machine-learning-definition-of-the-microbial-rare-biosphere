@@ -110,6 +110,7 @@ fuzzyq_all_species <- lapply(species_size_groups,
 fuzzyq_all_species.df <- bind_rows(fuzzyq_all_species)
 
 #  
+fuzzy_vs_species_number <- 
 fuzzyq_all_species.df %>% 
   mutate(Classification = factor(Classification, levels = c("Rare", "Common"))) %>% 
   ggplot(aes(size, avgSil, col = Classification)) + 
@@ -121,10 +122,12 @@ fuzzyq_all_species.df %>%
   theme_classic() + 
   labs(x = "number of species",
        y = "average Silhouette score",
-       title = "fuzzyQ performance as a function of number of species",
-       subtitle = "total reads per sample = 50000 reads\nn = 34 samples")+
-  theme(legend.position = "top") + 
+#       title = "fuzzyQ performance as a function of number of species",
+       #subtitle = "total reads per sample = 50000 reads\nn = 34 samples"
+) +
+  theme(legend.position = "top",
+        axis.text.x = element_text(angle = 90)) + 
   scale_color_manual(values = qualitative_colors[c(3, 6)]) + 
-  geom_text(data = evaluation_sil_extra, aes(y = score+0.075, x = 250, label = evaluation), col = "black") + 
+  geom_text(data = evaluation_sil_extra, aes(y = score+0.075, x = 3500, label = evaluation), col = "black") + 
   scale_x_continuous(breaks = seq(from = 100, to = 4000, by = 300))
  

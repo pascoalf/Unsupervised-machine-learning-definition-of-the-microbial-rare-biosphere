@@ -82,7 +82,8 @@ evaluation_sil_extra <- evaluation_sil
 evaluation_sil_extra[4,] <- c(0, "Potentially artificial", "Rare")
 evaluation_sil_extra$score <- as.numeric(evaluation_sil_extra$score)
 #
-bind_rows(all_sample_groups_fuzzyq) %>% 
+fuzzyq_vs_sample_size <- 
+  bind_rows(all_sample_groups_fuzzyq) %>% 
   mutate(Classification = factor(Classification, levels = c("Rare", "Common"))) %>% 
   ggplot(aes(x = size, y = avgSil, col = Classification)) + 
   geom_point() +
@@ -92,7 +93,7 @@ bind_rows(all_sample_groups_fuzzyq) %>%
   theme(legend.position = "top") +
   labs(x = "n", 
        y = "average Silhouette score",
-       title = "fuzzyQ performance as a function of number of samples (n)",
+  #     title = "fuzzyQ performance as a function of number of samples (n)",
        subtitle = "Total reads per sample = 10000 reads") + 
   geom_vline(xintercept = 30, lty = "dashed", col = "grey41") + 
   scale_color_manual(values = qualitative_colors[c(3, 6)]) +

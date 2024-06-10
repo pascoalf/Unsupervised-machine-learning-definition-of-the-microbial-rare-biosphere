@@ -101,7 +101,7 @@ fuzzyQ_all_seq_power <- lapply(reads_groups.2, function(size){
   multiple_rarefaction_fuzzyQ(x = mosj_matrix_selected, size = size)})
 
 # plot performance vs seq power
-fuzzyQ_all_seq_power %>%
+fuzzy_vs_seq_power <- fuzzyQ_all_seq_power %>%
   bind_rows() %>% 
   ggplot(aes(size, avgSil, col = Classification)) + 
   stat_summary() + 
@@ -113,9 +113,10 @@ fuzzyQ_all_seq_power %>%
   ylim(0,1) + 
   geom_hline(yintercept = c(0.25, 0.5, 0.7), lty = "dashed") + 
   geom_text(data = evaluation_sil, # this object was made in "R/species_number_effect.R"
-            aes(y = score+0.025, x = 3500, label = evaluation), col = "black") + 
-  labs(y = "mean (\U00B1 sd) of average Silhouette score",
+            aes(y = score+0.025, x = 7500, label = evaluation), col = "black") + 
+  labs(y = "average Silhouette score",
        x = "number of reads per sample",
-       title = "fuzzyQ performance as a function of number of reads per sample",
-       subtitle = "n = 34 samples") +
+       #title = "fuzzyQ performance as a function of number of reads per sample",
+       #subtitle = "n = 34 samples"
+       ) +
   scale_color_manual(values = qualitative_colors[c(3, 4, 7)])
