@@ -119,4 +119,4 @@ fuzzy_vs_seq_power <- fuzzyQ_all_seq_power %>%
        #title = "fuzzyQ performance as a function of number of reads per sample",
        #subtitle = "n = 34 samples"
        ) +
-  scale_color_manual(values = qualitative_colors[c(3, 4, 7)])
+  scale_color_manual(values = qualitative_colors[c(3, 7)])
