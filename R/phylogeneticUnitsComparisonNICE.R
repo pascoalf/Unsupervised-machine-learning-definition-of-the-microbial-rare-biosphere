@@ -301,7 +301,7 @@ nice_summary_ulrb_rarefied_tidy %>%
         panel.grid.minor.y = element_blank(),
         panel.grid.major.x = element_line(color = "grey"),
         strip.text = element_text(size = 12)) + 
-  labs(x = "kind of phylogenetic unit",
+  labs(x = "classification",
        y = "number of phylogenetic units")
 
 

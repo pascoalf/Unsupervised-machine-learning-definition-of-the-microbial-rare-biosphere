@@ -201,7 +201,7 @@ short_vs_full_ulrb_with_thresholds_summary %>%
         strip.text = element_text(size = 12),
         axis.text = element_text(size = 10),
         axis.title = element_text(size = 12)) + 
-  labs(x = "marker gene",
+  labs(x = "classification",
        y = "number of ASVs",
        fill = "Molecular method: ",
        col = "Molecular method: ") 
