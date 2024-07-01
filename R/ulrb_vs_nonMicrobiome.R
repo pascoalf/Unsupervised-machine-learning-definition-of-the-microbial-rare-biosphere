@@ -43,15 +43,18 @@ grid.arrange(
     ggplot(aes(Taxa_id, y = Abundance, col = Classification)) +
     #geom_point(size = 1.5) +
     stat_summary() +
-    theme_bw() +
+    theme_classic() +
     theme(axis.text.x = element_blank(),
           panel.grid = element_blank(),
           axis.ticks.x = element_blank(), 
           strip.background = element_blank(),
-          legend.position = "top") + 
-    labs(x = "ranked ant species",
-         y = "mean \U00B1 sd relative abundance (%)",
-         col = "Classification ",
+          legend.position = "top",
+          axis.text.y = element_text(size = 12),
+          axis.title = element_text(size = 14),
+          legend.text = element_text(size = 12)) + 
+    labs(x = "Ranked ant species",
+         y = "Mean \U00B1 sd\n relative abundance (%)",
+         col = "Classification:",
          title = "Ants dataset",
          tag = "a") +
     scale_color_manual(values = qualitative_colors[c(3,4,7)]),
@@ -65,12 +68,15 @@ grid.arrange(
           panel.grid = element_blank(),
           axis.ticks.x = element_blank(), 
           strip.background = element_blank(),
-          legend.position = "top") + 
+          legend.position = "top",
+          axis.text.y = element_text(size = 12),
+          axis.title = element_text(size = 14),
+          legend.text = element_text(size = 12)) + 
     geom_hline(yintercept = 0)  + 
     geom_hline(yintercept = 0.5, lty = "dashed") + 
-    labs(x = "ranked ant species",
-         y = "mean \U00B1 sd of average Silhouette score",
-         col = "Classification ",
+    labs(x = "Ranked ant species",
+         y = "Mean \U00B1 sd of\n average Silhouette score",
+         col = "Classification:",
          title = "Ants dataset",
          tag = "b") +
     scale_color_manual(values = qualitative_colors[c(3,4,7)]),
@@ -88,10 +94,13 @@ grid.arrange(
           panel.grid = element_blank(),
           axis.ticks.x = element_blank(), 
           strip.background = element_blank(),
-          legend.position = "top") + 
-    labs(x = "ranked ant species",
-         y = "mean \U00B1 sd relative abundance (%)",
-         col = "Classification ",
+          legend.position = "top",
+          axis.text.y = element_text(size = 12),
+          axis.title = element_text(size = 14),
+          legend.text = element_text(size = 12)) + 
+    labs(x = "Ranked ant species",
+         y = "Mean \U00B1 sd \nrelative abundance (%)",
+         col = "Classification:",
          title = "BCI dataset",
          tag = "c") +
     scale_color_manual(values = qualitative_colors[c(3, 4, 7)]),
@@ -105,11 +114,14 @@ grid.arrange(
           panel.grid = element_blank(),
           axis.ticks.x = element_blank(), 
           strip.background = element_blank(),
-          legend.position = "top") + 
+          legend.position = "top",
+          axis.text.y = element_text(size = 12),
+          axis.title = element_text(size = 14),
+          legend.text = element_text(size = 12)) + 
     labs(title = "BCI dataset",
-         x = "ranked tree species",
-         y = "mean \U00B1 sd of average Silhouette score",
-         col = "Classification",
+         x = "Ranked tree species",
+         y = "Mean \U00B1 sd\n of average Silhouette score",
+         col = "Classification:",
          tag = "d") +
     scale_color_manual(values = qualitative_colors[c(3, 4, 7)]) + 
     geom_hline(yintercept = 0) + 

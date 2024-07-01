@@ -34,8 +34,9 @@ ulrb_vs_samples_plot <- ulrb_sample_size_effect.2_df %>%
   scale_x_continuous(breaks = seq(from = 0, to = 110, by = 10)) + 
   theme_classic() + 
   theme(legend.position = "top") +
-  labs(x = "n", 
-       y = "mean (\U00B1 sd) of average Silhouette score",
+  labs(x = "Number of samples (n)", 
+       y = "Mean (\U00B1 sd) of \naverage Silhouette score",
+       col = "Classification: ",
        #title = "ulrb performance as a function of number of samples (n)",
        subtitle = "Total reads per sample = 10000 reads") + 
   geom_vline(xintercept = 30, lty = "dashed", col = "grey41") + 
@@ -82,7 +83,7 @@ evaluation_sil_extra <- evaluation_sil
 evaluation_sil_extra[4,] <- c(0, "Potentially artificial", "Rare")
 evaluation_sil_extra$score <- as.numeric(evaluation_sil_extra$score)
 #
-fuzzyq_vs_sample_size <- 
+(fuzzyq_vs_sample_size <- 
   bind_rows(all_sample_groups_fuzzyq) %>% 
   mutate(Classification = factor(Classification, levels = c("Rare", "Common"))) %>% 
   ggplot(aes(x = size, y = avgSil, col = Classification)) + 
@@ -96,9 +97,9 @@ fuzzyq_vs_sample_size <-
   #     title = "fuzzyQ performance as a function of number of samples (n)",
        subtitle = "Total reads per sample = 10000 reads") + 
   geom_vline(xintercept = 30, lty = "dashed", col = "grey41") + 
-  scale_color_manual(values = qualitative_colors[c(3, 6)]) +
+  scale_color_manual(values = qualitative_colors[c(3, 7)]) +
   ylim(-0.5, 1) + 
   geom_hline(yintercept = c(0.7, 0.5, 0.25), lty = "dashed", col = "grey41")+ 
   geom_text(data = evaluation_sil_extra, ## data frane nade in "species_number_effect.R"
-            aes(y = score+0.025, x = 110, label = evaluation), col = "black") 
+            aes(y = score+0.025, x = 110, label = evaluation), col = "black") )
 

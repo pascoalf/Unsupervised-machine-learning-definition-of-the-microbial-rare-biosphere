@@ -46,12 +46,17 @@ all_species_test_df %>%
   ylim(0,1) + 
   geom_hline(yintercept = c(0.25, 0.5, 0.7), lty = "dashed") + 
   theme_classic() + 
-  labs(x = "number of species",
-       y = "mean (\U00B1 sd) of average Silhouette score",
+  labs(x = "Number of species",
+       y = "Mean (\U00B1 sd) of \naverage Silhouette score",
        #title = "ulrb performance as a function of number of species",
-       subtitle = "total reads per sample = 50000 reads\nn = 34 samples")+
+      # subtitle = "total reads per sample = 50000 reads\nn = 34 samples"
+      )+
   theme(legend.position = "top",
-        axis.text.x = element_text(angle = 90)) + 
+        axis.text.x = element_text(angle = 90, size = 12),
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 14),
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 14)) + 
   scale_color_manual(values = qualitative_colors[c(3, 4, 7)]) + 
   geom_text(data = evaluation_sil, aes(y = score+0.025, x = 1000, label = evaluation), col = "black") + 
   scale_x_continuous(breaks = seq(from = 100, to = 4000, by = 300))
@@ -127,7 +132,7 @@ fuzzyq_all_species.df %>%
 ) +
   theme(legend.position = "top",
         axis.text.x = element_text(angle = 90)) + 
-  scale_color_manual(values = qualitative_colors[c(3, 6)]) + 
+  scale_color_manual(values = qualitative_colors[c(3, 7)]) + 
   geom_text(data = evaluation_sil_extra, aes(y = score+0.075, x = 3500, label = evaluation), col = "black") + 
   scale_x_continuous(breaks = seq(from = 100, to = 4000, by = 300))
  

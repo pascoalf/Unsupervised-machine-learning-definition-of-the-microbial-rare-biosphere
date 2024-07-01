@@ -230,7 +230,7 @@ gridExtra::grid.arrange(
     ggplot(aes(x = reorder(ID, -RelativeAbundance), 
                y = RelativeAbundance, 
                col = Classification)) +
-    geom_point(alpha = 0.5)+
+    geom_point(alpha = 0.5, size = 2)+
     #stat_summary(alpha = 0.5) +
     facet_grid(~Type, scales = "free") + 
     scale_color_manual(values = qualitative_colors[c(3,4,7)]) + 
@@ -240,12 +240,16 @@ gridExtra::grid.arrange(
     theme(axis.text.x = element_blank(),
           panel.grid = element_blank(),
           strip.background = element_blank(),
-          strip.text = element_text(size = 10),
+          strip.text = element_text(size = 14),
           axis.ticks.x = element_blank(),
-          legend.position = "top") + 
-    labs(x = "ranked phylogenetic units",
+          legend.position = "top",
+          legend.title = element_text(size = 14),
+          legend.text = element_text(size = 14),
+          axis.title = element_text(size = 14),
+          axis.text.y = element_text(size = 12)) + 
+    labs(x = "Ranked phylogenetic units",
          y = "Relative abundance (%) \n(Log10 scale)",
-         col = "classification: ",
+         col = "Classification: ",
          tag = "a")
   ,
   # silhouette scores
@@ -253,7 +257,7 @@ gridExtra::grid.arrange(
     mutate(Type = factor(Type, levels = c("ASV", "OTU", "mOTU"))) %>% 
     ggplot(aes(reorder(ID, -Silhouette_scores), 
                Silhouette_scores, col = Classification)) + 
-    geom_point(alpha = 0.5) + 
+    geom_point(alpha = 0.5, size = 2) + 
     #stat_summary(alpha = 0.5) + 
     facet_wrap(~Type, scales = "free_x") + 
     #  scale_fill_manual(values = qualitative_colors[c(2,4,7)]) + 
@@ -262,11 +266,13 @@ gridExtra::grid.arrange(
     theme(axis.ticks.x = element_blank(),
           axis.text.x = element_blank(),
           strip.background = element_blank(),
-          strip.text = element_text(size = 10),
-          panel.grid = element_blank()) +
+          strip.text = element_text(size = 14),
+          panel.grid = element_blank(),
+          axis.title = element_text(size = 14),
+          axis.text.y = element_text(size = 12)) +
     guides(color = "none") + 
     labs(y = "Silhouette score \n(Log10 scale)",
-         x = "ranked phylogenetic units",
+         x = "Ranked phylogenetic units",
          tag = "b") + 
     geom_hline(yintercept = c(0)) + 
     geom_hline(yintercept = c(-0.5, 0.5), lty = "dashed", color = "grey41")
@@ -283,15 +289,15 @@ nice_summary_ulrb_rarefied_tidy %>%
                                         "two thresholds (0.1% and 1%)",
                                         "ulrb"))) %>% 
   ggplot(aes(x = Classification, y = Count)) +
-  stat_summary(aes(y = Count, group = Type, 
-                   color = Type), 
-               fun = median, geom = "line",
-               lwd = 1, lty = "dashed") + 
   geom_half_boxplot(side = "l", aes(fill = Type), 
                     outlier.colour = "red",
                     outlier.shape = "cross",
                     outlier.size = 2)+
-  geom_half_point(side = "r", size = 0.75, aes(col = Type)) + 
+  geom_half_point(side = "r", size = 1.5, aes(col = Type)) +
+  stat_summary(aes(y = Count, group = Type, 
+                   color = Type), 
+               fun = median, geom = "line",
+               lwd = 0.5) +
   facet_grid(~Definition, scales = "free_x") + 
   scale_fill_manual(values = qualitative_colors[c(1, 2, 3)]) + 
   scale_color_manual(values = qualitative_colors[c(1, 2, 3)]) + 
@@ -300,9 +306,12 @@ nice_summary_ulrb_rarefied_tidy %>%
         strip.background = element_blank(),
         panel.grid.minor.y = element_blank(),
         panel.grid.major.x = element_line(color = "grey"),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 14),
         strip.text = element_text(size = 12)) + 
-  labs(x = "classification",
-       y = "number of phylogenetic units")
+  labs(x = "Classification: ",
+       y = "Number of phylogenetic units",
+       fill = "Phylogenetic units: ")
 
 
 ## report on silhouette scores
@@ -337,7 +346,7 @@ plot_sil_species <-
         panel.grid = element_blank(),
         legend.position = "top") + 
   labs(y = "Percentage of phylogenetic units (%)",
-       fill = "Evaluation",
+       fill = "Evaluation: ",
        title = "Evaluation of unit within its classification/cluster",
        tag = "a")
 
@@ -408,7 +417,7 @@ plot_sil_nice_overall <- silhouette_structure_overall %>%
         legend.position = "top") + 
   labs(y = "Percentage of samples (%)",
        fill = "Evaluation",
-       title = "Evaluation of final cluster (by average Silhouette score)",
+       title = "Evaluation of final cluster \n(by average Silhouette score)",
        tag = "c")
 
 
@@ -432,10 +441,17 @@ nice_ulrb_rarefied %>%
   facet_wrap(~Type, scales = "free_x") +
   theme_bw() + 
   scale_fill_manual(values = qualitative_colors) + 
+  scale_y_log10() +
   theme(strip.background = element_blank(),
-        strip.text = element_text(size = 10),
+        strip.text = element_text(size = 14),
         panel.grid = element_blank(),
-        legend.position = "top")
+        legend.position = "top",
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 14),
+        legend.text = element_text(size = 14),
+        legend.title = element_text(size = 14)) + 
+  labs(y = "Count (Log10 scale)",
+       fill = "Phylogenetic unit: ")
 
 ##
 
@@ -496,9 +512,14 @@ nice_fuzyQ %>%
         axis.ticks.x = element_blank(),
         legend.position = "top",
         strip.background = element_blank(),
-        strip.text = element_text(size =12)) + 
+        strip.text = element_text(size = 14),
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 14),
+        legend.text = element_text(size = 14),
+        legend.title = element_text(size = 14)) + 
   labs(y = "Commonnality index",
-       x = "Ranked pylogenetic units") + 
+       x = "Ranked pylogenetic units",
+       fill = "Classification: ") + 
   facet_grid(~Type, scales = "free_x") + 
   scale_color_manual(values = qualitative_colors[c(1,2)]) + 
   ylim(c(0,1)),
@@ -515,13 +536,17 @@ nice_fuzyQ %>%
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank(),
         strip.background = element_blank(),
-        strip.text = element_text(size =12)) + 
+        strip.text = element_text(size =14),
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 14)) + 
   geom_hline(yintercept = 0.5, lty = "dashed") + 
   facet_grid(~Type, scales = "free_x") + 
   labs(y = "Silhouette score",
        x = "Phylogenetic unit")+ 
   scale_color_manual(values = qualitative_colors[c(1,2)]) + 
-  scale_fill_manual(values = qualitative_colors[c(1,2)]))
+  scale_fill_manual(values = qualitative_colors[c(1,2)]) + 
+  guides(fill = FALSE, col = FALSE)
+)
   
 
 

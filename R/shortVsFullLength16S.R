@@ -149,13 +149,17 @@ gridExtra::grid.arrange(
           axis.ticks.x =element_blank(),
           legend.position = "top",
           strip.background = element_blank(),
-          strip.text = element_text(size = 10)) + 
+          strip.text = element_text(size = 14),
+          legend.title = element_text(size = 14),
+          legend.text = element_text(size = 14),
+          axis.text.y = element_text(size = 12),
+          axis.title = element_text(size = 14)) + 
     facet_grid(~Marker, scales = "free") + 
     scale_color_manual(values = qualitative_colors[c(3,4,7)]) + 
     scale_y_log10() + 
-    labs(x = "ranked ASV",
-         y = "relative abundance (%) \n(Log10 scale)",
-         col = "classification: "),
+    labs(x = "Ranked ASV",
+         y = "Relative abundance (%) \n(Log10 scale)",
+         col = "Classification: "),
   short_vs_full_ulrb %>%
     ggplot(aes(reorder(ID, -Silhouette_scores), 
                Silhouette_scores, 
@@ -168,29 +172,33 @@ gridExtra::grid.arrange(
           axis.ticks.x =element_blank(),
           legend.position = "top",
           strip.background = element_blank(),
-          strip.text = element_text(size = 10)) + 
+          strip.text = element_text(size = 14),
+          axis.text.y = element_text(size = 12),
+          axis.title = element_text(size = 14)) + 
     facet_grid(~Marker, scales = "free") + 
     scale_color_manual(values = qualitative_colors[c(3,4,7)]) + 
     guides(color = "none") + 
-    labs(x = "ranked ASV",
-         y = "Silhouette score") +
+    labs(x = "Ranked ASV",
+         y = "Silhouette score",
+         labs = "Classification: ") +
     geom_hline(yintercept = 0))
 
 # Alpha diversity
 short_vs_full_ulrb_with_thresholds_summary %>% 
   ggplot(aes(Classification, Count)) + 
-  facet_grid(~Definition) + 
-  stat_summary(aes(y = Count, group = Marker, 
-                   color = Marker), 
-               fun = median, geom = "line",
-               lwd = 1, lty = "dashed")+
+  facet_grid(~Definition) +
   geom_half_boxplot(side = "l", 
                     aes(fill = Marker),
                     outlier.colour = "red",
                     outlier.shape = "cross",
                     outlier.size = 3) +
   geom_half_point(side = "r", 
-                  aes(col = Marker)) + 
+                  aes(col = Marker),
+                  size = 1.5) + 
+  stat_summary(aes(y = Count, group = Marker, 
+                   color = Marker), 
+               fun = median, geom = "line",
+               lwd = 0.5) + 
   scale_color_manual(values = qualitative_colors[c(1,2)]) + 
   scale_fill_manual(values = qualitative_colors[c(1,2)]) + 
   theme_bw() + 
@@ -198,11 +206,13 @@ short_vs_full_ulrb_with_thresholds_summary %>%
         strip.background = element_blank(),
         panel.grid.major.x = element_line(color = "grey"),
         panel.grid.minor.y = element_blank(),
-        strip.text = element_text(size = 12),
-        axis.text = element_text(size = 10),
-        axis.title = element_text(size = 12)) + 
-  labs(x = "classification",
-       y = "number of ASVs",
+        strip.text = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 14),
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 14)) + 
+  labs(x = "Classification: ",
+       y = "Number of ASVs",
        fill = "Molecular method: ",
        col = "Molecular method: ") 
 
@@ -320,7 +330,9 @@ plot_short_vs_full_silhouette_structure_overall <-
 ##
 
 grid.arrange(
-  short_vs_full_plot_sil_species + theme(axis.text.x = element_text(angle = 90, vjust  = 0)),
+  short_vs_full_plot_sil_species + 
+    theme(axis.text.x = element_text(angle = 90, vjust  = 0)) +
+    labs(fill = "Evaluation: "),
   arrangeGrob(
     short_vs_full_plot_sil_class + theme(axis.text.x = element_text(angle = 90, vjust  = 0)) + guides(fill = "none"),
     plot_short_vs_full_silhouette_structure_overall + guides(fill = "none")),
@@ -331,27 +343,41 @@ grid.arrange(
 grid.arrange(
   short_vs_full_ulrb %>% 
     ggplot(aes(Abundance, fill = Marker)) + 
-    geom_histogram(bins = 50, alpha = 0.75) + 
+    geom_histogram(bins = 100, alpha = 0.75) + 
     facet_wrap(~Marker, scales = "free_x") +
-    theme_bw() + 
+    theme_bw() +
     scale_fill_manual(values = qualitative_colors) + 
+    scale_y_log10() +
     theme(strip.background = element_blank(),
-          strip.text = element_text(size = 10),
+          strip.text = element_text(size = 14),
           panel.grid = element_blank(),
-          legend.position = "top") + 
-    labs(tag = "a")
+          legend.position = "top",
+          axis.text = element_text(size = 12),
+          axis.title = element_text(size = 14),
+          legend.text = element_text(size = 14),
+          legend.title = element_text(size = 14)) + 
+    labs(tag = "a", 
+         y = "Count (Log10)",
+         fill = "Marker: ") 
   ,
   short_vs_full_ulrb %>%
     ggplot(aes(Abundance, fill = Classification)) + 
-    geom_histogram(bins = 50, alpha = 0.75) + 
+    geom_histogram(bins = 1000, alpha = 0.75) + 
     facet_wrap(~Marker, scales = "free_x") +
     theme_bw() + 
-    scale_fill_manual(values = qualitative_colors[c(3,4,7)]) + 
+    scale_fill_manual(values = qualitative_colors[c(3,4,7)]) +
+    scale_y_log10() +
     theme(strip.background = element_blank(),
-          strip.text = element_text(size = 10),
+          strip.text = element_text(size = 14),
           panel.grid = element_blank(),
-          legend.position = "top") + 
-    labs(tag = "b")
+          legend.position = "top",
+          axis.text = element_text(size = 12),
+          axis.title = element_text(size = 14),
+          legend.text = element_text(size = 14),
+          legend.title = element_text(size = 14)) +
+    labs(tag = "b",
+         y = "Count (Log10)",
+         fill = "Classification: ")
 )
 
 # short vs full microbenchmarking #
@@ -458,10 +484,15 @@ short_vs_long_fuzzy %>%
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank(),
         strip.background = element_blank(),
-        strip.text = element_text(size = 12)) + 
-  labs(title = "FuzzyQ: V4V5 vs full-length 16S rRNA gene",
+        strip.text = element_text(size =14),
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 14),
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 14)) + 
+  labs(#title = "FuzzyQ: V4V5 vs full-length 16S rRNA gene",
        y = "Commonality index",
-       x = "ASVs")+ 
+       x = "ASVs",
+       fill = "Classification: ")+ 
   scale_color_manual(values = qualitative_colors[c(1,2)]) + 
   scale_fill_manual(values = qualitative_colors[c(1,2)]),
 short_vs_long_fuzzy %>% 
@@ -477,9 +508,12 @@ short_vs_long_fuzzy %>%
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank(),
         strip.background = element_blank(),
-        strip.text = element_text(size = 12)) + 
+        strip.text = element_text(size =14),
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 14)) + 
   labs(y = "Silhouette score",
        x = "ASVs") + 
   scale_color_manual(values = qualitative_colors[c(1,2)]) + 
-  scale_fill_manual(values = qualitative_colors[c(1,2)]))
+  scale_fill_manual(values = qualitative_colors[c(1,2)]) + 
+  guides(fill = FALSE, col = FALSE))
   
