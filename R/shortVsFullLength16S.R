@@ -343,11 +343,11 @@ grid.arrange(
 grid.arrange(
   short_vs_full_ulrb %>% 
     ggplot(aes(Abundance, fill = Marker)) + 
-    geom_histogram(bins = 100, alpha = 0.75) + 
+    geom_histogram(bins = 60, alpha = 0.75) + 
     facet_wrap(~Marker, scales = "free_x") +
     theme_bw() +
     scale_fill_manual(values = qualitative_colors) + 
-    scale_y_log10() +
+    scale_x_log10() +
     theme(strip.background = element_blank(),
           strip.text = element_text(size = 14),
           panel.grid = element_blank(),
@@ -362,11 +362,11 @@ grid.arrange(
   ,
   short_vs_full_ulrb %>%
     ggplot(aes(Abundance, fill = Classification)) + 
-    geom_histogram(bins = 1000, alpha = 0.75) + 
+    geom_histogram(bins = 60, alpha = 0.75) + 
     facet_wrap(~Marker, scales = "free_x") +
     theme_bw() + 
     scale_fill_manual(values = qualitative_colors[c(3,4,7)]) +
-    scale_y_log10() +
+    scale_x_log10() +
     theme(strip.background = element_blank(),
           strip.text = element_text(size = 14),
           panel.grid = element_blank(),

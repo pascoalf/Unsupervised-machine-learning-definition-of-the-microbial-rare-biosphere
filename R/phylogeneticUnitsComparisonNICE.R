@@ -437,11 +437,11 @@ grid.arrange(
 nice_ulrb_rarefied %>% 
   mutate(Type = factor(Type, levels = c("ASV", "OTU", "mOTU"))) %>%
   ggplot(aes(Abundance, fill = Type)) + 
-  geom_histogram(bins = 30, alpha = 0.75) +
+  geom_histogram(bins = 60, alpha = 0.75) +
   facet_wrap(~Type, scales = "free_x") +
   theme_bw() + 
   scale_fill_manual(values = qualitative_colors) + 
-  scale_y_log10() +
+  scale_x_log10() +
   theme(strip.background = element_blank(),
         strip.text = element_text(size = 14),
         panel.grid = element_blank(),
@@ -450,8 +450,10 @@ nice_ulrb_rarefied %>%
         axis.title = element_text(size = 14),
         legend.text = element_text(size = 14),
         legend.title = element_text(size = 14)) + 
-  labs(y = "Count (Log10 scale)",
-       fill = "Phylogenetic unit: ")
+  labs(y = "Count",
+       x = "Abundance (Log10 scale)",
+       fill = "Phylogenetic unit:")
+
 
 ##
 
