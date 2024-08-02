@@ -213,8 +213,8 @@ short_vs_full_ulrb_with_thresholds_summary %>%
         legend.text = element_text(size = 14)) + 
   labs(x = "Classification",
        y = "Number of ASVs",
-       fill = "Molecular method: ",
-       col = "Molecular method: ") 
+       fill = "Sequencing strategy: ",
+       col = "Sequencing strategy: ") 
 
 
 
@@ -492,7 +492,8 @@ short_vs_long_fuzzy %>%
   labs(#title = "FuzzyQ: V4V5 vs full-length 16S rRNA gene",
        y = "Commonality index",
        x = "ASVs",
-       fill = "Classification: ")+ 
+       fill = "Classification: ",
+       col = "Classification: ")+ 
   scale_color_manual(values = qualitative_colors[c(1,2)]) + 
   scale_fill_manual(values = qualitative_colors[c(1,2)]),
 short_vs_long_fuzzy %>% 

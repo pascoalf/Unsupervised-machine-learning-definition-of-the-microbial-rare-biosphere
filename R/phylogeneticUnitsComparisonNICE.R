@@ -309,9 +309,10 @@ nice_summary_ulrb_rarefied_tidy %>%
         axis.text = element_text(size = 12),
         axis.title = element_text(size = 14),
         strip.text = element_text(size = 12)) + 
-  labs(x = "Classification: ",
+  labs(x = "Classification",
        y = "Number of phylogenetic units",
-       fill = "Phylogenetic units: ")
+       fill = "Phylogenetic units: ",
+       col = "Phylogenetic units: ")
 
 
 ## report on silhouette scores
