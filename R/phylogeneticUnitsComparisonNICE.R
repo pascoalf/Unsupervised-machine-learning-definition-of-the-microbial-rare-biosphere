@@ -437,7 +437,7 @@ grid.arrange(
 nice_ulrb_rarefied %>% 
   mutate(Type = factor(Type, levels = c("ASV", "OTU", "mOTU"))) %>%
   ggplot(aes(Abundance, fill = Type)) + 
-  geom_histogram(bins = 60, alpha = 0.75) +
+  geom_histogram(bins = 30, alpha = 0.75) +
   facet_wrap(~Type, scales = "free_x") +
   theme_bw() + 
   scale_fill_manual(values = qualitative_colors) + 
@@ -454,6 +454,11 @@ nice_ulrb_rarefied %>%
        x = "Abundance (Log10 scale)",
        fill = "Phylogenetic unit:")
 
+## different values is a simpler way 
+nice_ulrb_rarefied %>% 
+  group_by(Type) %>% 
+  count(Abundance) %>% 
+  summarise(n(), min(Abundance), max(Abundance))
 
 ##
 

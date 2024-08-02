@@ -211,7 +211,7 @@ short_vs_full_ulrb_with_thresholds_summary %>%
         axis.title = element_text(size = 14),
         legend.title = element_text(size = 14),
         legend.text = element_text(size = 14)) + 
-  labs(x = "Classification: ",
+  labs(x = "Classification",
        y = "Number of ASVs",
        fill = "Molecular method: ",
        col = "Molecular method: ") 
