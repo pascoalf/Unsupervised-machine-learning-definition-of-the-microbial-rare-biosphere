@@ -46,7 +46,7 @@ all_species_test_df %>%
   ylim(0,1) + 
   geom_hline(yintercept = c(0.25, 0.5, 0.7), lty = "dashed") + 
   theme_classic() + 
-  labs(x = "Number of species",
+  labs(x = "Number of ASVs",
        y = "Mean (\U00B1 sd) of \naverage Silhouette score",
        #title = "ulrb performance as a function of number of species",
       # subtitle = "total reads per sample = 50000 reads\nn = 34 samples"
@@ -125,7 +125,7 @@ fuzzyq_all_species.df %>%
   geom_hline(yintercept = c(0.25, 0.5, 0.7), lty = "dashed") + 
   geom_vline(xintercept = 700, lty = "dashed") + 
   theme_classic() + 
-  labs(x = "number of species",
+  labs(x = "number of ASVs",
        y = "average Silhouette score",
 #       title = "fuzzyQ performance as a function of number of species",
        #subtitle = "total reads per sample = 50000 reads\nn = 34 samples"

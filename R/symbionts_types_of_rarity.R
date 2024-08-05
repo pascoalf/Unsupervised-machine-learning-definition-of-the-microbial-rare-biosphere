@@ -36,9 +36,9 @@ survey_otu <- function(data, otu){
     geom_point(size = 3) + 
     geom_line(aes(group = group)) + 
     theme_classic() + 
-    theme(axis.text.x = element_text(size = 14, angle = 90),
-          axis.text.y = element_text(size = 14),
-          axis.title = element_text(size = 16)) + 
+    theme(axis.text.x = element_text(size = 12, angle = 90),
+          axis.text.y = element_text(size = 12),
+          axis.title = element_text(size = 14)) + 
     geom_vline(xintercept = c(2.5, 4.5, 6.5, 10.5, 13.5, 16.5),
                lty = "dashed") + 
     labs(x = "Sample",
@@ -59,3 +59,17 @@ target_otus <- c("OTU_863", "OTU_866", "OTU_875",
 
 lapply(target_otus, function(x){survey_otu(data = symbiose_tidy,
                                            otu = x)})
+
+
+#
+grid.arrange(
+survey_otu(data = symbiose_tidy,
+           otu = "OTU_561"),
+survey_otu(data = symbiose_tidy,
+           otu = "OTU_559"),
+survey_otu(data = symbiose_tidy,
+           otu = "OTU_866"), 
+ncol = 1)
+
+
+

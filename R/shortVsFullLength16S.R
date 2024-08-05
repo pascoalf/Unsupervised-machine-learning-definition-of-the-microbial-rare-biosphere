@@ -251,7 +251,7 @@ short_vs_full_plot_sil_species <-
         legend.position = "top") + 
   labs(y = "Percentage of phylogenetic units (%)",
        fill = "Evaluation",
-       title = "Positioning of phylogenetic units in their clusters",
+       title = "Positioning of ASVs in their clusters",
        tag = "a")
 
 ##
@@ -324,7 +324,7 @@ plot_short_vs_full_silhouette_structure_overall <-
         legend.position = "top") + 
   labs(y = "percentage of samples (%)",
        fill = "Evaluation",
-       title = "Structure of final clustering",
+       title = "Evaluation of final clustering",
        tag = "c")
 
 ##

@@ -20,11 +20,13 @@ make_rarefaction_phylo_units <- function(unit = "ASV", ...){
   rownames(x) <- sample_names_rarefaction
   rarecurve(x, ...)
 }
+
 par(mfrow = c(1,3))
 # ASVs
 make_rarefaction_phylo_units(step = 100, 
                              lwd = 2, 
                              col = qualitative_colors[1],
+                             cex.lab = 1.5,
                              main = "Rarefaction curve for ASVs (N-ICE, 2015)",
                              ylab = "Number of ASVs",
                              xlab = "Number of reads")
@@ -33,6 +35,7 @@ make_rarefaction_phylo_units(unit = "OTU",
                              step = 100, 
                              lwd = 2, 
                              col = qualitative_colors[2],
+                             cex.lab = 1.5,
                              main = "Rarefaction curve for OTUs (N-ICE, 2015)",
                              ylab = "Number of OTUs",
                              xlab = "Number of reads")
@@ -41,6 +44,7 @@ make_rarefaction_phylo_units(unit = "mOTU",
                              step = 10, 
                              lwd = 2, 
                              col = qualitative_colors[3],
+                             cex.lab = 1.5,
                              main = "Rarefaction curve for mOTUs (N-ICE, 2015)",
                              ylab = "Number of mOTUs",
                              xlab = "Number of reads")
@@ -73,6 +77,7 @@ par(mfrow = c(1,2))
 make_rarefaction_short_vs_full(step = 1000, 
                                lwd = 2.5, 
                                col = qualitative_colors[1],
+                               cex.lab = 1.5,
                                main = "V4V5 16S rRNA (MOSJ2019)",
                                xlab = "Number of reads",
                                ylab = "Number of ASVs")
@@ -81,6 +86,7 @@ make_rarefaction_short_vs_full(marker = "Full-length",
                                step = 100, 
                                lwd = 2.5, 
                                col = qualitative_colors[2],
+                               cex.lab = 1.5,
                                main = "Full-length 16S rRNA (MOSJ2019)",
                                xlab = "Number of reads",
                                ylab = "Number of ASVs")
@@ -117,18 +123,18 @@ par(mfrow = c(2,3))
 #make_rarefaction_AO(y = 2015, step = 500, lwd = 2, col = qualitative_colors[1],
 #                   main = "2015", xlab = "Number of reads", ylab = "Number of ASVs")
 # 2016
-make_rarefaction_AO(y = 2016, step = 500, lwd = 2, col = qualitative_colors[2],
+make_rarefaction_AO(y = 2016, step = 500, cex.lab = 1.5, cex.main = 2 ,lwd = 2, col = qualitative_colors[2],
                     main = "2016", xlab = "Number of reads", ylab = "Number of ASVs")
 # 2017
-make_rarefaction_AO(y = 2017, step = 500, lwd = 2, col = qualitative_colors[3],
+make_rarefaction_AO(y = 2017, step = 500, cex.lab = 1.5, cex.main = 2, lwd = 2, col = qualitative_colors[3],
                     main = "2017", xlab = "Number of reads", ylab = "Number of ASVs")
 # 2018
-make_rarefaction_AO(y = 2018, step = 500, lwd = 2, col = qualitative_colors[4],
+make_rarefaction_AO(y = 2018, step = 500, cex.lab = 1.5, cex.main = 2, lwd = 2, col = qualitative_colors[4],
                     main = "2018", xlab = "Number of reads", ylab = "Number of ASVs")
 # 2019
-make_rarefaction_AO(y = 2019, step = 500, lwd = 2, col = qualitative_colors[5],
+make_rarefaction_AO(y = 2019, step = 500, cex.lab = 1.5, cex.main = 2, lwd = 2, col = qualitative_colors[5],
                     main = "2019", xlab = "Number of reads", ylab = "Number of ASVs")
 # 2020
-make_rarefaction_AO(y = 2020, step = 500, lwd = 2, col = qualitative_colors[6],
+make_rarefaction_AO(y = 2020, step = 500, cex.lab = 1.5, cex.main = 2, lwd = 2, col = qualitative_colors[6],
                     main = "2020", xlab = "Number of reads", ylab = "Number of ASVs")
 
