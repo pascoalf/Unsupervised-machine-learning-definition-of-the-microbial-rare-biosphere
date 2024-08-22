@@ -134,54 +134,72 @@ short_vs_full_ulrb_with_thresholds_summary <-
   mutate(Definition = case_when(Definition == "Classification" ~ "ulrb",
                                 Definition == "Rarity_0.1" ~ "one threshold (0.1%)",
                                 TRUE ~ "two thresholds (0.1% and 1%)"))
+
+
+# RAC linear
+RAC_linear_seq <- short_vs_full_ulrb %>%
+  mutate(Group = paste(Sample, Classification, sep = "_")) %>% 
+  group_by(Sample, Marker) %>% 
+  arrange(desc(Abundance)) %>% 
+  mutate(uniqueRank = row_number()) %>% 
+  ungroup() %>% 
+  ggplot(aes(uniqueRank, 
+             RelativeAbundance, 
+             col = Classification)) + 
+  geom_point(alpha = 0.75) + 
+  geom_line(aes(group = Group)) + 
+  geom_hline(yintercept = c(0.01, 0.1, 1), linetype = "dashed") +
+  theme_bw() + 
+  theme(axis.text.x = element_blank(),
+        panel.grid = element_blank(),
+        axis.ticks.x =element_blank(),
+        legend.position = "top",
+        strip.background = element_blank(),
+        strip.text = element_text(size = 14),
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 14),
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 14)) + 
+  facet_grid(~Marker, scales = "free") + 
+  scale_color_manual(values = qualitative_colors[c(3,5,7)]) + 
+  scale_y_log10() + 
+  labs(x = "Ranked ASV",
+       y = "Relative abundance (%) \n(Log10 scale)",
+       col = "Classification: ",
+       tag = "a")
+
+# Silhouete scores lines
+sil_lines_seq <- short_vs_full_ulrb %>%
+  mutate(Group = paste(Sample, Classification, sep = "_")) %>% 
+  group_by(Group, Marker) %>% 
+  arrange(desc(Silhouette_scores)) %>% 
+  mutate(uniqueRank = row_number()) %>% 
+  ungroup() %>%
+  ggplot(aes(uniqueRank, 
+             Silhouette_scores, 
+             col = Classification)) +
+  geom_line(aes(group = Group)) + 
+  geom_point(alpha = 0.75) + 
+  theme_bw() + 
+  theme(axis.text.x = element_blank(),
+        panel.grid = element_blank(),
+        axis.ticks.x =element_blank(),
+        legend.position = "top",
+        strip.background = element_blank(),
+        strip.text = element_text(size = 14),
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 14)) + 
+  facet_grid(~Marker, scales = "free") + 
+  scale_color_manual(values = qualitative_colors[c(3,5,7)]) + 
+  guides(color = "none") + 
+  labs(x = "Ranked ASV",
+       y = "Silhouette score",
+       labs = "Classification: ",
+       tag = "b") +
+  geom_hline(yintercept = 0)
+
 # View results
-gridExtra::grid.arrange(
-  short_vs_full_ulrb %>%
-    ggplot(aes(reorder(ID, -RelativeAbundance), 
-               RelativeAbundance, 
-               col = Classification)) + 
-    geom_point(alpha = 0.5) + 
-    #stat_summary(size = 0.5, alpha = 0.5) +
-    geom_hline(yintercept = c(0.01, 0.1, 1), linetype = "dashed") +
-    theme_bw() + 
-    theme(axis.text.x = element_blank(),
-          panel.grid = element_blank(),
-          axis.ticks.x =element_blank(),
-          legend.position = "top",
-          strip.background = element_blank(),
-          strip.text = element_text(size = 14),
-          legend.title = element_text(size = 14),
-          legend.text = element_text(size = 14),
-          axis.text.y = element_text(size = 12),
-          axis.title = element_text(size = 14)) + 
-    facet_grid(~Marker, scales = "free") + 
-    scale_color_manual(values = qualitative_colors[c(3,4,7)]) + 
-    scale_y_log10() + 
-    labs(x = "Ranked ASV",
-         y = "Relative abundance (%) \n(Log10 scale)",
-         col = "Classification: "),
-  short_vs_full_ulrb %>%
-    ggplot(aes(reorder(ID, -Silhouette_scores), 
-               Silhouette_scores, 
-               col = Classification)) +
-    geom_point(alpha = 0.5) + 
-    #stat_summary(size = 0.5, alpha = 0.5) +
-    theme_bw() + 
-    theme(axis.text.x = element_blank(),
-          panel.grid = element_blank(),
-          axis.ticks.x =element_blank(),
-          legend.position = "top",
-          strip.background = element_blank(),
-          strip.text = element_text(size = 14),
-          axis.text.y = element_text(size = 12),
-          axis.title = element_text(size = 14)) + 
-    facet_grid(~Marker, scales = "free") + 
-    scale_color_manual(values = qualitative_colors[c(3,4,7)]) + 
-    guides(color = "none") + 
-    labs(x = "Ranked ASV",
-         y = "Silhouette score",
-         labs = "Classification: ") +
-    geom_hline(yintercept = 0))
+gridExtra::grid.arrange(RAC_linear_seq, sil_lines_seq)
 
 # Alpha diversity
 short_vs_full_ulrb_with_thresholds_summary %>% 
@@ -473,9 +491,11 @@ short_vs_long_fuzzy <- fuzzy_short_df %>%
 #
 gridExtra::grid.arrange(
 short_vs_long_fuzzy %>% 
-  ggplot(aes(reorder(ID, -Common.I), Common.I,
+  ggplot(aes(reorder(ID, -Common.I), 
+             Common.I,
              col = Classification,
-             fill = Classification)) + 
+             fill = Classification)) +
+  geom_line(aes(group = Classification), col = "grey72") + 
   geom_point() + 
   facet_grid(~Marker, scales = "free_x") + 
   geom_hline(yintercept = 0.5, lty = "dashed") + 

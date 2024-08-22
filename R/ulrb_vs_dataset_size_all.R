@@ -2,18 +2,21 @@
 
 grid.arrange(
 ulrb_vs_samples_plot + 
+  scale_color_manual(values = qualitative_colors[c(3,5,7)])+
   labs(subtitle = NULL, tag = "a") + 
   theme(axis.text = element_text(size = 14),
         axis.title = element_text(size = 14),
         legend.title = element_text(size = 14),
         legend.text = element_text(size = 14)),
 ulrb_vs_species_plot + 
+  scale_color_manual(values = qualitative_colors[c(3,5,7)]) + 
   labs(subtitle = NULL,
        tag = "b") + 
   theme(axis.text = element_text(size = 14),
         axis.title = element_text(size = 14)) + 
   guides(col = FALSE),
 ulrb_vs_seq_power_plot + 
+  scale_color_manual(values = qualitative_colors[c(3,5,7)]) + 
   labs(subtitle = NULL,
        tag = "c") + 
   theme(axis.text = element_text(size = 14),
