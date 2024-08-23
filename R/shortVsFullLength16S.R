@@ -495,8 +495,8 @@ short_vs_long_fuzzy %>%
              Common.I,
              col = Classification,
              fill = Classification)) +
-  geom_line(aes(group = Classification), col = "grey72") + 
   geom_point() + 
+  geom_line(aes(group = Classification), col = "grey72") + 
   facet_grid(~Marker, scales = "free_x") + 
   geom_hline(yintercept = 0.5, lty = "dashed") + 
   theme_classic() + 
