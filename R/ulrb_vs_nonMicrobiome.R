@@ -1,11 +1,9 @@
 # ulrb vs non-microbiome datasets
 
-## BCI datasets
-# transform to long format
-BCI_tidy <- prepare_tidy_data(BCI, samples_in = "rows", sample_names = rownames(BCI))
+## BCI datasets, see "BCI_processing.R" script.
+#BCI_tidy <- prepare_tidy_data(BCI, samples_in = "rows", sample_names = rownames(BCI))
 # 
-BCI_ulrb <- BCI_tidy %>% 
-  define_rb()
+#BCI_ulrb <- BCI_tidy %>%  define_rb()
 
 ## Ants dataset
 data("antsA")
