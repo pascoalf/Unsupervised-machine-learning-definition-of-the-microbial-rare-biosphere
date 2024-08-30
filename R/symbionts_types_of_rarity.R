@@ -47,20 +47,6 @@ survey_otu <- function(data, otu){
     ylim(c("Absent", "Rare", "Undetermined", "Abundant"))
 }
 
-
-## target OTUs
-target_otus <- c("OTU_863", "OTU_866", "OTU_875",
-                 "OTU_761", "OTU_943", "OTU_800",
-                 "OTU_866", "OTU_875", "OTU_943",
-                 "OTU_152", "OTU_173", "OTU_559",
-                 "OTU_535", "OTU_571", "OTU_561")
-
-#
-
-lapply(target_otus, function(x){survey_otu(data = symbiose_tidy,
-                                           otu = x)})
-
-
 #
 grid.arrange(
 survey_otu(data = symbiose_tidy,

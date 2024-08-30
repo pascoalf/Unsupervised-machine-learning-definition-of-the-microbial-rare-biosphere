@@ -54,7 +54,6 @@ ulrb_vs_samples_plot <- ulrb_sample_size_effect.2_df %>%
 colnames(all_years_ulrb_matrix) <- paste("ASV", seq_along(1:length(colnames(all_years_ulrb_matrix))))
 #
 
-
 fuzzyq_sample_size <- function(x, size){
   # subsample n samples
   set.seed(123); subsampled_data <- x[sample(1:114, size = size, replace = FALSE),]
@@ -74,6 +73,7 @@ fuzzyq_sample_size <- function(x, size){
 #
 
 # apply to all groups
+# takes a long time
 all_sample_groups_fuzzyq <- lapply(
   sample_size_groups, 
   function(size) fuzzyq_sample_size(x = all_years_ulrb_matrix, size = size))

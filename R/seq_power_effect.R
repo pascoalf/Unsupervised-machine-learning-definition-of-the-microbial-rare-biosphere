@@ -97,6 +97,7 @@ fuzzyq_cluster$spp %>%
 }
 
 # run fuzzyQ for all seq. powers
+# very slow
 fuzzyQ_all_seq_power <- lapply(reads_groups.2, function(size){
   multiple_rarefaction_fuzzyQ(x = mosj_matrix_selected, size = size)})
 

@@ -446,27 +446,6 @@ grid.arrange(
   nrow = 1, ncol = 2)
 
 
-## why are ASVs harder to cluster?
-nice_ulrb_rarefied %>% 
-  mutate(Type = factor(Type, levels = c("ASV", "OTU", "mOTU"))) %>%
-  ggplot(aes(Abundance, fill = Type)) + 
-  geom_histogram(bins = 30, alpha = 0.75) +
-  facet_wrap(~Type, scales = "free_x") +
-  theme_bw() + 
-  scale_fill_manual(values = qualitative_colors) + 
-  scale_x_log10() +
-  theme(strip.background = element_blank(),
-        strip.text = element_text(size = 14),
-        panel.grid = element_blank(),
-        legend.position = "top",
-        axis.text = element_text(size = 12),
-        axis.title = element_text(size = 14),
-        legend.text = element_text(size = 14),
-        legend.title = element_text(size = 14)) + 
-  labs(y = "Count",
-       x = "Abundance (Log10 scale)",
-       fill = "Phylogenetic unit:")
-
 ## different values is a simpler way 
 nice_ulrb_rarefied %>% 
   group_by(Type) %>% 
