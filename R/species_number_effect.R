@@ -1,14 +1,15 @@
 ## effect of number of species
-#
-set.seed(123); test_1000_species <- all_years_rarefaction %>% 
-  group_by(Sample) %>% 
-  slice_sample(n = 1000) %>% 
-  define_rb() %>% 
-  group_by(Sample, Classification) %>% 
-  summarise(avgSil = mean(Silhouette_scores))
+# (example for a single test)
+#set.seed(123); test_1000_species <- all_years_rarefaction %>% 
+#  group_by(Sample) %>% 
+#  slice_sample(n = 1000) %>% 
+#  define_rb() %>% 
+#  group_by(Sample, Classification) %>% 
+#  summarise(avgSil = mean(Silhouette_scores))
 
 #
 test_species_size <- function(size){
+  set.seed(123)
   all_years_rarefaction %>% 
     group_by(Sample) %>% 
     slice_sample(n = size) %>% 
@@ -135,3 +136,13 @@ fuzzyq_all_species.df %>%
   geom_text(data = evaluation_sil_extra, aes(y = score+0.075, x = 3500, label = evaluation), col = "black") + 
   scale_x_continuous(breaks = seq(from = 100, to = 4000, by = 300))
  
+
+## extras
+test_10 <- all_years_rarefaction %>% 
+   group_by(Sample) %>% 
+  slice_sample(n = 10)
+
+test_10 %>% 
+  define_rb() %>% 
+  plot_ulrb_clustering(taxa_col = "Sequence", log_scaled = TRUE, sample_id = "m18_33", plot_all = FALSE)
+
