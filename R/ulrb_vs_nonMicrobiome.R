@@ -29,8 +29,6 @@ ranked_ants <- antsA_tidy %>%
   pull(Taxa_id)
 
 
-
-
 # Ants RAC
 Ants_rac <- ants_ulrb %>% 
     group_by(Sample) %>% 
@@ -160,3 +158,77 @@ Ants_rac,
 Ants_sil,
 BCI_RAC,
 BCI_sil)
+
+
+### more tests
+ants_absolute <- ants_ulrb
+ants_relative <- antsA_tidy %>% 
+  group_by(Sample) %>% 
+  mutate(Abundance = Abundance*100/sum(Abundance)) %>% 
+  define_rb()
+
+classifications_absolute_values <- ants_absolute %>% select(Sample, Classification, Taxa_id) %>% mutate(Type = "Absolute")
+classifications_relative_values <- ants_relative %>% select(Sample, Classification, Taxa_id) %>% mutate(Type = "Relative")
+
+comparison <- classifications_absolute_values == classifications_relative_values
+
+combined_ants <- classifications_absolute_values %>% bind_rows(classifications_relative_values)
+
+
+BCI_absolute <- BCI_ulrb
+BCI_relative <- BCI_tidy %>% 
+  group_by(Sample) %>% 
+  mutate(Abundance = Abundance*100/sum(Abundance)) %>% 
+  define_rb()
+
+#
+classifications_bci_abs <- BCI_absolute %>% select(Sample, Classification, Taxa_id) %>% mutate(Type = "Absolute")
+classifications_bci_relative <- BCI_relative %>% select(Sample, Classification, Taxa_id) %>% mutate(Type = "Relative")
+
+combined_classifications_bci <- classifications_bci_abs %>% rbind(classifications_bci_relative)
+
+
+gridExtra::grid.arrange(
+combined_ants %>% 
+  group_by(Sample, Type) %>% 
+  count(Classification)  %>% 
+  ggplot(aes(Classification, n, col = Classification)) +
+  geom_point() + 
+  facet_grid(~Type) + 
+  theme_classic() + 
+  theme(panel.grid = element_blank(),
+        axis.ticks.x = element_blank(), 
+        strip.background = element_blank(),
+        legend.position = "top",
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 14),
+        legend.text = element_text(size = 12)) + 
+  scale_color_manual(values = qualitative_colors[c(3, 5, 7)]) + 
+  labs(title = "Ants dataset",
+       x = "Classification",
+       y = "Count",
+       col = "Classification:",
+       tag = "a") ,
+#
+combined_classifications_bci %>% 
+  group_by(Sample, Type) %>% 
+  count(Classification)  %>% 
+  ggplot(aes(Classification, n, col = Classification)) +
+  geom_point() + 
+  facet_grid(~Type) + 
+  theme_classic() + 
+  theme(panel.grid = element_blank(),
+        axis.ticks.x = element_blank(), 
+        strip.background = element_blank(),
+        legend.position = "top",
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 14),
+        legend.text = element_text(size = 12)) + 
+  scale_color_manual(values = qualitative_colors[c(3, 5, 7)]) + 
+  labs(title = "BCI dataset",
+       x = "Classification",
+       y = "Count",
+       col = "Classification:",
+       tag = "b"))
+
+
