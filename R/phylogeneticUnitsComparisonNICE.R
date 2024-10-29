@@ -306,10 +306,10 @@ nice_summary_ulrb_rarefied_tidy %>%
                     outlier.shape = "cross",
                     outlier.size = 2)+
   geom_half_point(side = "r", size = 1.5, aes(col = Type)) +
-  stat_summary(aes(y = Count, group = Type, 
-                   color = Type), 
-               fun = median, geom = "line",
-               lwd = 0.5) +
+  #stat_summary(aes(y = Count, group = Type, 
+   #                color = Type), 
+    #           fun = median, geom = "line",
+     #          lwd = 0.5) +
   facet_grid(~Definition, scales = "free_x") + 
   scale_fill_manual(values = qualitative_colors[c(1, 2, 3)]) + 
   scale_color_manual(values = qualitative_colors[c(1, 2, 3)]) + 
@@ -360,7 +360,7 @@ plot_sil_species <-
         legend.position = "top") + 
   labs(y = "Percentage of phylogenetic units (%)",
        fill = "Evaluation: ",
-       title = "Evaluation of unit within its classification/cluster",
+      # title = "Evaluation of unit within its classification/cluster",
        tag = "a")
 
 
@@ -396,7 +396,7 @@ plot_sil_class <- silhouette_structure_per_classifications %>%
         legend.position = "top") + 
   labs(y = "Percentage of samples (%)",
        fill = "Evaluation",
-       title = "Evaluation of each classification/cluster",
+    #   title = "Evaluation of each classification/cluster",
        tag = "b")
 
 # average overall (i.e. structure of the clustering)
@@ -430,7 +430,7 @@ plot_sil_nice_overall <- silhouette_structure_overall %>%
         legend.position = "top") + 
   labs(y = "Percentage of samples (%)",
        fill = "Evaluation",
-       title = "Evaluation of final cluster \n(by average Silhouette score)",
+#       title = "Evaluation of final cluster \n(by average Silhouette score)",
        tag = "c")
 
 
@@ -455,31 +455,31 @@ nice_ulrb_rarefied %>%
 ##
 
 ## phylogenetic units benchmark
-set.seed(123)
-nice_ulrb_rarefied_for_bench <- 
-  nice_dataset %>% 
-  filter(Abundance > 1) %>% 
-  mutate(Rarefaction = case_when(Type == "ASV" ~ asv_rarefaction,
-                                 Type == "OTU" ~ otu_rarefaction,
-                                 Type == "mOTU" ~ motu_rarefaction)) %>% 
-  group_by(Type, Sample, Rarefaction) %>% 
-  nest() %>% 
-  mutate(Rarefied_reads = map(.x = data, 
-                              ~as.data.frame(
-                                t(
-                                  rrarefy(.x$Abundance, 
-                                          sample = Rarefaction))))) %>% 
-  unnest(c(data, Rarefied_reads)) %>% 
-  rename(Rarefied_abundance = "V1") %>% 
-  mutate(Abundance = Rarefied_abundance, Rarefied_abundance = NULL)
+#set.seed(123)
+#nice_ulrb_rarefied_for_bench <- 
+#  nice_dataset %>% 
+#  filter(Abundance > 1) %>% 
+#  mutate(Rarefaction = case_when(Type == "ASV" ~ asv_rarefaction,
+#                                 Type == "OTU" ~ otu_rarefaction,
+#                                 Type == "mOTU" ~ motu_rarefaction)) %>% 
+#  group_by(Type, Sample, Rarefaction) %>% 
+#  nest() %>% 
+#  mutate(Rarefied_reads = map(.x = data, 
+#                              ~as.data.frame(
+#                                t(
+#                                  rrarefy(.x$Abundance, 
+#                                          sample = Rarefaction))))) %>% 
+#  unnest(c(data, Rarefied_reads)) %>% 
+#  rename(Rarefied_abundance = "V1") %>% 
+#  mutate(Abundance = Rarefied_abundance, Rarefied_abundance = NULL)
 
 #
-nice_ulrb_rarefied_for_bench_ASV <- 
-  nice_ulrb_rarefied_for_bench %>% filter(Type == "ASV")
-nice_ulrb_rarefied_for_bench_OTU <- 
-  nice_ulrb_rarefied_for_bench %>% filter(Type == "OTU")
-nice_ulrb_rarefied_for_bench_mOTU <- 
-  nice_ulrb_rarefied_for_bench %>% filter(Type == "mOTU")
+#nice_ulrb_rarefied_for_bench_ASV <- 
+ # nice_ulrb_rarefied_for_bench %>% filter(Type == "ASV")
+#nice_ulrb_rarefied_for_bench_OTU <- 
+ # nice_ulrb_rarefied_for_bench %>% filter(Type == "OTU")
+#nice_ulrb_rarefied_for_bench_mOTU <- 
+ # nice_ulrb_rarefied_for_bench %>% filter(Type == "mOTU")
 
 #
 #phylgeneticUnits_benchmark <- 
@@ -519,7 +519,8 @@ nice_fuzyQ %>%
         legend.title = element_text(size = 14)) + 
   labs(y = "Commonnality index",
        x = "Ranked pylogenetic units",
-       fill = "Classification: ") + 
+       fill = "Classification: ",
+       tag = "a") + 
   facet_grid(~Type, scales = "free_x") + 
   scale_color_manual(values = qualitative_colors[c(1,2)]) + 
   ylim(c(0,1)),
@@ -542,7 +543,8 @@ nice_fuzyQ %>%
   geom_hline(yintercept = 0.5, lty = "dashed") + 
   facet_grid(~Type, scales = "free_x") + 
   labs(y = "Silhouette score",
-       x = "Phylogenetic unit")+ 
+       x = "Phylogenetic unit",
+       tag = "b")+ 
   scale_color_manual(values = qualitative_colors[c(1,2)]) + 
   scale_fill_manual(values = qualitative_colors[c(1,2)]) + 
   guides(fill = FALSE, col = FALSE)

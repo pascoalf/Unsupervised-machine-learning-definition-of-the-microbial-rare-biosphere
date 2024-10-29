@@ -213,10 +213,10 @@ short_vs_full_ulrb_with_thresholds_summary %>%
   geom_half_point(side = "r", 
                   aes(col = Marker),
                   size = 1.5) + 
-  stat_summary(aes(y = Count, group = Marker, 
-                   color = Marker), 
-               fun = median, geom = "line",
-               lwd = 0.5) + 
+  #stat_summary(aes(y = Count, group = Marker, 
+   #                color = Marker), 
+    #           fun = median, geom = "line",
+     #          lwd = 0.5) + 
   scale_color_manual(values = qualitative_colors[c(1,2)]) + 
   scale_fill_manual(values = qualitative_colors[c(1,2)]) + 
   theme_bw() + 
@@ -269,7 +269,7 @@ short_vs_full_plot_sil_species <-
         legend.position = "top") + 
   labs(y = "Percentage of phylogenetic units (%)",
        fill = "Evaluation",
-       title = "Positioning of ASVs in their clusters",
+       #title = "Positioning of ASVs in their clusters",
        tag = "a")
 
 ##
@@ -306,7 +306,7 @@ short_vs_full_plot_sil_class <-
         legend.position = "top") + 
   labs(y = "Percentage of samples (%)",
        fill = "Evaluation",
-       title = "Structure of each classification",
+       #title = "Structure of each classification",
        tag = "b")
 
 ##
@@ -342,7 +342,7 @@ plot_short_vs_full_silhouette_structure_overall <-
         legend.position = "top") + 
   labs(y = "percentage of samples (%)",
        fill = "Evaluation",
-       title = "Evaluation of final clustering",
+#       title = "Evaluation of final clustering",
        tag = "c")
 
 ##
