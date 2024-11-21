@@ -426,7 +426,8 @@ short_vs_long_fuzzy %>%
        y = "Commonality index",
        x = "ASVs",
        fill = "Classification: ",
-       col = "Classification: ")+ 
+       col = "Classification: ",
+       tag = "a")+ 
   scale_color_manual(values = qualitative_colors[c(1,2)]) + 
   scale_fill_manual(values = qualitative_colors[c(1,2)]),
 short_vs_long_fuzzy %>% 
@@ -446,7 +447,8 @@ short_vs_long_fuzzy %>%
         axis.text.y = element_text(size = 12),
         axis.title = element_text(size = 14)) + 
   labs(y = "Silhouette score",
-       x = "ASVs") + 
+       x = "ASVs",
+       tag = "b") + 
   scale_color_manual(values = qualitative_colors[c(1,2)]) + 
   scale_fill_manual(values = qualitative_colors[c(1,2)]) + 
   guides(fill = FALSE, col = FALSE))

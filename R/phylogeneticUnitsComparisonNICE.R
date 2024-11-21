@@ -318,7 +318,7 @@ nice_summary_ulrb_rarefied_tidy %>%
         strip.background = element_blank(),
         panel.grid.minor.y = element_blank(),
         panel.grid.major.x = element_line(color = "grey"),
-        axis.text = element_text(size = 12),
+        axis.text = element_text(size = 11),
         axis.title = element_text(size = 14),
         strip.text = element_text(size = 12)) + 
   labs(x = "Classification",
@@ -519,7 +519,7 @@ nice_fuzyQ %>%
         legend.title = element_text(size = 14)) + 
   labs(y = "Commonnality index",
        x = "Ranked pylogenetic units",
-       fill = "Classification: ",
+       col = "Classification: ",
        tag = "a") + 
   facet_grid(~Type, scales = "free_x") + 
   scale_color_manual(values = qualitative_colors[c(1,2)]) + 
