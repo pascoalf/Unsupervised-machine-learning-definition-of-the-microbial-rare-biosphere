@@ -50,11 +50,17 @@ survey_otu <- function(data, otu){
 #
 grid.arrange(
 survey_otu(data = symbiose_tidy,
-           otu = "OTU_561"),
+           otu = "OTU_561") + 
+  labs(title = "Genus Anaerospora (mOTU 561)",
+       subtitle = ""),
 survey_otu(data = symbiose_tidy,
-           otu = "OTU_559"),
+           otu = "OTU_559") + 
+  labs(title = "Family Rhodobacteraceae (mOTU 559)",
+       subtitle = ""),
 survey_otu(data = symbiose_tidy,
-           otu = "OTU_866"), 
+           otu = "OTU_866") +
+  labs(title = "Family Endozoicimonaceae (mOTU 866)",
+       subtitle = ""), 
 ncol = 1)
 
 
