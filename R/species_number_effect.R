@@ -146,3 +146,19 @@ test_10 %>%
   define_rb() %>% 
   plot_ulrb_clustering(taxa_col = "Sequence", log_scaled = TRUE, sample_id = "m18_33", plot_all = FALSE)
 
+
+## two examples for supplementary data
+test_n <- function(n){
+  all_years_rarefaction %>% 
+    group_by(Sample) %>% 
+    slice_sample(n = n) %>% 
+    mutate(size = paste(n, "ASVs"))
+  }
+#
+test_n(100) %>% 
+ rbind(test_n(1000)) %>% 
+  rbind(test_n(3000)) %>% 
+  define_rb() %>% 
+plot_ulrb_clustering(taxa_col = "Sequence", log_scaled = TRUE, sample_id = "m18_33", plot_all = FALSE) + 
+  facet_grid(~size)
+
