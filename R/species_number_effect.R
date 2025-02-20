@@ -160,5 +160,6 @@ test_n(100) %>%
   rbind(test_n(3000)) %>% 
   define_rb() %>% 
 plot_ulrb_clustering(taxa_col = "Sequence", log_scaled = TRUE, sample_id = "m18_33", plot_all = FALSE) + 
-  facet_grid(~size)
+  facet_grid(~size) + 
+  labs(x = "Ranked ASVs")
 
