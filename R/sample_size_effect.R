@@ -26,14 +26,16 @@ ulrb_sample_size_effect.2_df <- bind_rows(ulrb_sample_size_effect.2) %>%
 
 #
 ulrb_vs_samples_plot <- ulrb_sample_size_effect.2_df %>% 
-  ggplot(aes(x = size, avgSil, col = Classification))+
-  stat_summary() + 
+  ggplot(aes(x = size, avgSil, col = Classification, fill = Classification))+
+  stat_summary(size = 1, shape = 21, col = "black") + 
   stat_summary(aes(y = avgSil, group = Classification, 
                    color = Classification), 
                fun = mean, geom = "line") + 
+  geom_point(alpha = 0.1) + 
   scale_x_continuous(breaks = seq(from = 0, to = 110, by = 10)) + 
   theme_classic() + 
-  theme(legend.position = "top") +
+  theme(legend.position = "top",
+        panel.background = element_rect(fill = "grey90")) +
   labs(x = "Number of samples (n)", 
        y = "Mean (\U00B1 sd) of \naverage Silhouette score",
        col = "Classification: ",
@@ -42,10 +44,11 @@ ulrb_vs_samples_plot <- ulrb_sample_size_effect.2_df %>%
   geom_vline(xintercept = 30, lty = "dashed", col = "grey41") + 
   scale_color_manual(values = qualitative_colors[c(3, 4, 7)])+
   scale_fill_manual(values = qualitative_colors[c(3, 4, 7)]) + 
-  ylim(0, 1) + 
+  #ylim(0, 1) + 
   geom_hline(yintercept = c(0.7, 0.5, 0.25), lty = "dashed", col = "grey41")+ 
-  geom_text(data = evaluation_sil, ## data frane nade in "species_number_effect.R"
-            aes(y = score+0.025, x = 110, label = evaluation), col = "black") 
+  geom_label(data = evaluation_sil, ## data frane nade in "species_number_effect.R"
+            aes(y = score+0.025, x = 110, label = evaluation), 
+            col = "black", fill = "white") 
 
 
 ## Same analysis for FuzzyQ
