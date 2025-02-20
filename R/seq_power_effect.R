@@ -55,22 +55,25 @@ ulrb_vs_reads_df.2 <- bind_rows(ulrb_vs_reads.2)
 
 #
 ulrb_vs_seq_power_plot <- ulrb_vs_reads_df.2 %>% 
-  ggplot(aes(size, avgSil, col = Classification)) + 
-  stat_summary() + 
+  ggplot(aes(size, avgSil, col = Classification, fill = Classification)) + 
+  geom_point(alpha = 0.1) + 
+  stat_summary(col = "black", shape = 21) + 
   stat_summary(aes(y = avgSil, group = Classification, 
                    color = Classification), 
                fun = mean, geom = "line") + 
   theme_classic() + 
-  theme(legend.position = "top") + 
-  ylim(0,1) + 
+  theme(legend.position = "top",
+        panel.background = element_rect(fill = "grey90")) + 
+  #ylim(0,1) + 
   geom_hline(yintercept = c(0.25, 0.5, 0.7), lty = "dashed") + 
-  geom_text(data = evaluation_sil, # this object was made in "R/species_number_effect.R"
-            aes(y = score+0.025, x = 10000, label = evaluation), col = "black") + 
+  #geom_text(data = evaluation_sil, # this object was made in "R/species_number_effect.R"
+   #         aes(y = score+0.025, x = 10000, label = evaluation), col = "black") + 
   labs(y = "Mean (\U00B1 sd) of\n average Silhouette score",
        x = "Number of reads per sample",
        #title = "ulrb performance as a function of number of reads per sample",
        subtitle = "n = 34 samples") +
-  scale_color_manual(values = qualitative_colors[c(3, 4, 7)])
+  scale_color_manual(values = qualitative_colors[c(3, 4, 7)]) + 
+  scale_fill_manual(values = qualitative_colors[c(3, 4, 7)])
 
 
 ## fuzzyQ
