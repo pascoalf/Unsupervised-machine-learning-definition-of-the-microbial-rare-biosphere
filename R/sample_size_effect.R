@@ -27,11 +27,11 @@ ulrb_sample_size_effect.2_df <- bind_rows(ulrb_sample_size_effect.2) %>%
 #
 ulrb_vs_samples_plot <- ulrb_sample_size_effect.2_df %>% 
   ggplot(aes(x = size, avgSil, col = Classification, fill = Classification))+
+  geom_point(alpha = 0.1) + 
   stat_summary(size = 1, shape = 21, col = "black") + 
   stat_summary(aes(y = avgSil, group = Classification, 
                    color = Classification), 
                fun = mean, geom = "line") + 
-  geom_point(alpha = 0.1) + 
   scale_x_continuous(breaks = seq(from = 0, to = 110, by = 10)) + 
   theme_classic() + 
   theme(legend.position = "top",
