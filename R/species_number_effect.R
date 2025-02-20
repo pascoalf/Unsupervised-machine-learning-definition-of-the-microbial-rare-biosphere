@@ -39,7 +39,7 @@ evaluation_sil <- data.frame(score = c(0.26, 0.51, 0.71),
 ulrb_vs_species_plot <- all_species_test_df %>% 
   ggplot(aes(size, avgSil, col = Classification, fill = Classification)) + 
   geom_point(alpha = 0.1) + 
-  stat_summary(size = 1, shape = 21, col = "black") + 
+  stat_summary(shape = 21, col = "black") + 
   stat_summary(aes(y = avgSil, group = Classification, 
                    color = Classification), 
                fun = mean, geom = "line") +
