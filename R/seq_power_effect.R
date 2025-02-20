@@ -17,7 +17,7 @@ hq_samples <- all_years %>%
   filter(Total_reads >= 50000) %>% 
   pull(Sample) 
   
-# 
+# function to apply results for any rarefaction level
 nested_rarefaction.2 <- function(size){
   if(size > 50000){
     stop("Maximum size is 50000")
