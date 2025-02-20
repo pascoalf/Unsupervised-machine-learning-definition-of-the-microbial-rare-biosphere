@@ -36,14 +36,14 @@ evaluation_sil <- data.frame(score = c(0.26, 0.51, 0.71),
                              Classification = "Rare") # placeholder for label
 
 #
-ulrb_vs_species_plot <- 
-all_species_test_df %>% 
-  ggplot(aes(size, avgSil, col = Classification)) + 
-  stat_summary(alpha = 0.5) + 
+ulrb_vs_species_plot <- all_species_test_df %>% 
+  ggplot(aes(size, avgSil, col = Classification, fill = Classification)) + 
+  geom_point(alpha = 0.1) + 
+  stat_summary(size = 1, shape = 21, col = "black") + 
   stat_summary(aes(y = avgSil, group = Classification, 
                    color = Classification), 
                fun = mean, geom = "line") +
-  ylim(0,1) + 
+  #ylim(0,1) + 
   geom_hline(yintercept = c(0.25, 0.5, 0.7), lty = "dashed") + 
   theme_classic() + 
   labs(x = "Number of ASVs",
@@ -56,9 +56,13 @@ all_species_test_df %>%
         axis.text.y = element_text(size = 12),
         axis.title = element_text(size = 14),
         legend.title = element_text(size = 14),
-        legend.text = element_text(size = 14)) + 
+        legend.text = element_text(size = 14),
+        panel.background = element_rect(fill = "grey90")) + 
   scale_color_manual(values = qualitative_colors[c(3, 4, 7)]) + 
-  geom_text(data = evaluation_sil, aes(y = score+0.025, x = 1000, label = evaluation), col = "black") + 
+  scale_fill_manual(values = qualitative_colors[c(3, 4, 7)]) + 
+  #geom_label(data = evaluation_sil, 
+   #          aes(y = score+0.025, x = 3000, label = evaluation), 
+    #         col = "black", fill = "white") + 
   scale_x_continuous(breaks = seq(from = 100, to = 4000, by = 300))
   
 
