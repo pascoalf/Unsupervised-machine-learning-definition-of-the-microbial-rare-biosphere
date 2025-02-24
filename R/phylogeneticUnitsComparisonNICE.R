@@ -452,52 +452,6 @@ nice_ulrb_rarefied %>%
   count(Abundance) %>% 
   summarise(n(), min(Abundance), max(Abundance))
 
-##
-
-## phylogenetic units benchmark
-#set.seed(123)
-#nice_ulrb_rarefied_for_bench <- 
-#  nice_dataset %>% 
-#  filter(Abundance > 1) %>% 
-#  mutate(Rarefaction = case_when(Type == "ASV" ~ asv_rarefaction,
-#                                 Type == "OTU" ~ otu_rarefaction,
-#                                 Type == "mOTU" ~ motu_rarefaction)) %>% 
-#  group_by(Type, Sample, Rarefaction) %>% 
-#  nest() %>% 
-#  mutate(Rarefied_reads = map(.x = data, 
-#                              ~as.data.frame(
-#                                t(
-#                                  rrarefy(.x$Abundance, 
-#                                          sample = Rarefaction))))) %>% 
-#  unnest(c(data, Rarefied_reads)) %>% 
-#  rename(Rarefied_abundance = "V1") %>% 
-#  mutate(Abundance = Rarefied_abundance, Rarefied_abundance = NULL)
-
-#
-#nice_ulrb_rarefied_for_bench_ASV <- 
- # nice_ulrb_rarefied_for_bench %>% filter(Type == "ASV")
-#nice_ulrb_rarefied_for_bench_OTU <- 
- # nice_ulrb_rarefied_for_bench %>% filter(Type == "OTU")
-#nice_ulrb_rarefied_for_bench_mOTU <- 
- # nice_ulrb_rarefied_for_bench %>% filter(Type == "mOTU")
-
-#
-#phylgeneticUnits_benchmark <- 
-#  microbenchmark(ASV = {define_rb(nice_ulrb_rarefied_for_bench_ASV)},
-#                 OTU = {define_rb(nice_ulrb_rarefied_for_bench_OTU)},
-#                 mOTU = {define_rb(nice_ulrb_rarefied_for_bench_mOTU)})
-#
-#phylgeneticUnits_benchmark %>% 
-#  autoplot() + 
-#  theme_bw() +
-#  theme(panel.grid.minor = element_blank(),
-#        panel.grid.major.y = element_blank()) + 
-#  labs(x = "time (miliseconds)",
-#       y = "Phylogenetic unit",
-#       title = "Time it takes to run define_rb()",
-#       subtitle = "100 replications")
-
-
 
 #####
 gridExtra::grid.arrange(
