@@ -13,13 +13,15 @@ If you want to reproduce the figures and tables in the paper, please use the sou
 
 4 - (equivalent to section 3 Results)
 
-4.1 - R/sample_size_effect.R;
+4.1 - R/prepare_mosj_data.R;
 
-4.2 - R/species_number_effect.R;
+4.2 - R/sample_size_effect.R;
 
-4.3 - R/seq_power_effect.R;
+4.3 - R/species_number_effect.R;
 
-4.4 - R/ulrb_vs_dataset_size_all.R
+4.4 - R/seq_power_effect.R;
+
+4.5 - R/ulrb_vs_dataset_size_all.R
 
 5 - (equivalent to section 4 Results)
 
