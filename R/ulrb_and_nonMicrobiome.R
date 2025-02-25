@@ -1,4 +1,4 @@
-# ulrb vs non-microbiome datasets
+# ulrb and non-microbiome datasets
 
 ## BCI datasets, see "BCI_processing.R" script.
 #BCI_tidy <- prepare_tidy_data(BCI, samples_in = "rows", sample_names = rownames(BCI))
