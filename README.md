@@ -1,6 +1,6 @@
 # Unsupervised-machine-learning-definition-of-the-microbial-rare-biosphere
 
-Source code and source data for the paper "Definition of the microbial rare biosphere through unsupervised machine learning" by Pascoal et al. (2025), in peer-review in Communications Biology journal.
+Source code and source data for the paper "Definition of the microbial rare biosphere through unsupervised machine learning" by Pascoal et al. (2025), in Communications Biology journal (https://doi.org/10.1038/s42003-025-07912-4).
 
 **Source data**
 
@@ -58,7 +58,7 @@ Short description of source data files:
 
 **References:**
 
-Pascoal, F., Branco, P., Torgo, L., Costa, R., & Magalhães, C. (2025). Definition of the microbial rare biosphere through unsupervised machine learning. Communications Biology (in Peer-Review).
+Pascoal, F., Branco, P., Torgo, L. et al. Definition of the microbial rare biosphere through unsupervised machine learning. Commun Biol 8, 544 (2025). https://doi.org/10.1038/s42003-025-07912-4
 
 Keller-Costa, T., Lago-Lestón, A., Saraiva, J. P., Toscan, R., Silva, S. G., Gonçalves, J., Cox, C. J., Kyrpides, N., Nunes da Rocha, U., & Costa, R. (2021). Metagenomic insights into the taxonomy, function, and dysbiosis of prokaryotic communities in octocorals. Microbiome, 9(1), 72. https://doi.org/https://doi.org/10.1186/s40168-021-01031-y
 
